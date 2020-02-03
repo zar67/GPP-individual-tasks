@@ -9,8 +9,10 @@ public class Collectable : MonoBehaviour
 
     // Time Limit
     public float collectible_time_limit = 2f;
-    float elapsed_time = 0f;
-    bool collected = false;
+    [HideInInspector]
+    public float elapsed_time = 0f;
+    [HideInInspector]
+    public bool collected = false;
 
     // Rotation
     public float rotate_speed = 100f;
