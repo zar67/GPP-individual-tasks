@@ -6,6 +6,8 @@ public class Collectable : MonoBehaviour
 {
     // Particles
     public GameObject pickup_particles_prefab;
+    public GameObject player_particles_prefab;
+    GameObject player_particles;
 
     // Time Limit
     public float collectible_time_limit = 2f;
@@ -28,8 +30,6 @@ public class Collectable : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(Vector3.up * Time.deltaTime * rotate_speed);
-        
         if (collected)
         {
             elapsed_time += Time.deltaTime;
@@ -37,8 +37,13 @@ public class Collectable : MonoBehaviour
             if (elapsed_time >= collectible_time_limit)
             {
                 Disable();
+                Destroy(player_particles);
                 Destroy(gameObject);
             }
+        }
+        else
+        {
+            transform.Rotate(Vector3.up * Time.deltaTime * rotate_speed);
         }
     }
 
@@ -46,7 +51,15 @@ public class Collectable : MonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
-            Instantiate(pickup_particles_prefab, transform.position, transform.rotation).GetComponent<ParticleSystem>();
+            if (pickup_particles_prefab != null)
+            {
+                Instantiate(pickup_particles_prefab, transform.position, transform.rotation);
+            }
+            if (player_particles_prefab != null)
+            {
+                player_particles = Instantiate(player_particles_prefab, transform.position, transform.rotation, GameObject.FindGameObjectWithTag("Player").transform);
+            }
+
             collected = true;
             Pickup();
 
