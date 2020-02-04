@@ -27,6 +27,8 @@ public class RPGCharacterController : MonoBehaviour
     public bool can_double_jump = false;
     public float jump_force = 10;
     public float double_jump_force = 8;
+    bool set_jump = false;
+    bool set_double_jump = false;
 
     [HideInInspector]
     public bool double_jump = false;
@@ -76,6 +78,20 @@ public class RPGCharacterController : MonoBehaviour
                 armed_timer = 0;
             }
         }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            // Jump
+            if (IsGrounded())
+            {
+                set_jump = true;
+            }
+            // Double Jump
+            else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !double_jump)
+            {
+                set_double_jump = true;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -93,7 +109,7 @@ public class RPGCharacterController : MonoBehaviour
             velocity = -transform.forward * move_speed;
         }
 
-        if (IsGrounded())
+        if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
         {
             velocity.y = 0;
         }
@@ -104,26 +120,24 @@ public class RPGCharacterController : MonoBehaviour
 
         player_rb.velocity = velocity;
 
-        if (Input.GetButtonDown("Jump"))
+        if (set_jump)
         {
-            // Jump
-            if (IsGrounded())
-            {
-                player_animator.SetInteger("jumping", 1);
-                Vector3 position = player_rb.gameObject.transform.position;
-                position.y += 0.5f;
-                player_rb.gameObject.transform.position = position;
-                player_rb.velocity = Vector3.up * jump_force;
-                PlayDoubleJumpParticles();
-            }
-            // Double Jump
-            else if (can_double_jump && !IsGrounded() && player_animator.GetInteger("jumping") == 2 && !double_jump)
-            {
-                double_jump = true;
-                player_animator.Play("Double Jump", 0);
-                player_rb.velocity = Vector3.up * double_jump_force;
-                PlayDoubleJumpParticles();
-            }
+            set_jump = false;
+            player_animator.SetInteger("jumping", 1);
+            Vector3 position = player_rb.gameObject.transform.position;
+            position.y += 0.5f;
+            player_rb.gameObject.transform.position = position;
+            player_rb.velocity = Vector3.up * jump_force;
+            PlayDoubleJumpParticles();
+        }
+
+        if (set_double_jump)
+        {
+            set_double_jump = false;
+            double_jump = true;
+            player_animator.Play("Double Jump", 0);
+            player_rb.velocity = Vector3.up * double_jump_force;
+            PlayDoubleJumpParticles();
         }
 
         if (player_rb.velocity.y <= 0)
@@ -134,7 +148,7 @@ public class RPGCharacterController : MonoBehaviour
                 player_animator.SetInteger("jumping", 2);
             }
             // Land
-            else
+            else if (player_animator.GetInteger("jumping") == 2)
             {
                 player_animator.SetInteger("jumping", 0);
                 double_jump = false;

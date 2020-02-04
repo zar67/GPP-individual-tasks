@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickup_particles_prefab: {fileID: 0}
-  player_particles_prefab: {fileID: 7824340397569861274, guid: 8cd8223e6f745744880c2b1a7364dc43,
+  player_particles_prefab: {fileID: 7824340397569861274, guid: c13293ee58eabf542af6d8b3649901fc,
     type: 3}
   collectible_time_limit: 5
   elapsed_time: 0
