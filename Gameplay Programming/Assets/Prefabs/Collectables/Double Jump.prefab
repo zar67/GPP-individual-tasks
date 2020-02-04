@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f5062780758c413408bcebdeb66b96c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,7 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfac2aa6a34583a40baceafb22aef3a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickup_particles_prefab: {fileID: 7824340397569861274, guid: 05e62304fc9b6774a8506eac031d77bf,
+  pickup_particles_prefab: {fileID: 7824340397569861274, guid: 678485b2a07eafa4c8f8294b719aa7ca,
+    type: 3}
+  player_particles_prefab: {fileID: 7824340397569861274, guid: 913b4d6c049c2f8498a761021d317ba7,
     type: 3}
   collectible_time_limit: 20
   elapsed_time: 0
@@ -120,6 +122,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7469376947722254254}
     m_Modifications:
+    - target: {fileID: 7824340397569861274, guid: 43917c09f8cabe64f8d344b33d8a88bb,
+        type: 3}
+      propertyPath: m_Name
+      value: Particles
+      objectReference: {fileID: 0}
     - target: {fileID: 7824340397569861270, guid: 43917c09f8cabe64f8d344b33d8a88bb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -174,11 +181,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7824340397569861274, guid: 43917c09f8cabe64f8d344b33d8a88bb,
-        type: 3}
-      propertyPath: m_Name
-      value: Particles
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43917c09f8cabe64f8d344b33d8a88bb, type: 3}

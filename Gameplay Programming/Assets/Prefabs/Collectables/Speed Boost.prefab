@@ -107,6 +107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickup_particles_prefab: {fileID: 0}
+  player_particles_prefab: {fileID: 7824340397569861274, guid: 8cd8223e6f745744880c2b1a7364dc43,
+    type: 3}
   collectible_time_limit: 5
   elapsed_time: 0
   collected: 0
@@ -119,6 +121,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4572874134306139981}
     m_Modifications:
+    - target: {fileID: 7824340397569861274, guid: 8cd8223e6f745744880c2b1a7364dc43,
+        type: 3}
+      propertyPath: m_Name
+      value: Particles
+      objectReference: {fileID: 0}
     - target: {fileID: 7824340397569861270, guid: 8cd8223e6f745744880c2b1a7364dc43,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -173,11 +180,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7824340397569861274, guid: 8cd8223e6f745744880c2b1a7364dc43,
-        type: 3}
-      propertyPath: m_Name
-      value: Particles
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cd8223e6f745744880c2b1a7364dc43, type: 3}
