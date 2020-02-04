@@ -93,7 +93,15 @@ public class RPGCharacterController : MonoBehaviour
             velocity = -transform.forward * move_speed;
         }
 
-        velocity.y = player_rb.velocity.y;
+        if (IsGrounded())
+        {
+            velocity.y = 0;
+        }
+        else
+        {
+            velocity.y = player_rb.velocity.y;
+        }
+
         player_rb.velocity = velocity;
 
         if (Input.GetButtonDown("Jump"))
