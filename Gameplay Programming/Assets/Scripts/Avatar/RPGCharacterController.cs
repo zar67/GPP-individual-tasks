@@ -28,7 +28,8 @@ public class RPGCharacterController : MonoBehaviour
     public float jump_force = 10;
     public float double_jump_force = 8;
 
-    bool double_jump = false;
+    [HideInInspector]
+    public bool double_jump = false;
 
     // Arming Variables
     public GameObject weapon_sheathed;
@@ -36,6 +37,9 @@ public class RPGCharacterController : MonoBehaviour
     public Weapons current_weapon = Weapons.NONE;
     float armed_timer = 0;
     float armed_delay = 5;
+
+    // Collectables
+    public List<GameObject> active_collectables;
 
     // Component References
     Animator player_animator;
@@ -99,6 +103,7 @@ public class RPGCharacterController : MonoBehaviour
             {
                 player_animator.SetInteger("jumping", 1);
                 player_rb.velocity = Vector3.up * jump_force;
+                PlayDoubleJumpParticles();
             }
             // Double Jump
             else if (can_double_jump && !IsGrounded() && player_animator.GetInteger("jumping") == 2 && !double_jump)
@@ -106,6 +111,7 @@ public class RPGCharacterController : MonoBehaviour
                 double_jump = true;
                 player_animator.Play("Double Jump", 0);
                 player_rb.velocity = Vector3.up * double_jump_force;
+                PlayDoubleJumpParticles();
             }
         }
 
@@ -166,10 +172,10 @@ public class RPGCharacterController : MonoBehaviour
         }
     }
 
-    bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y, player_collider.bounds.center.z), 
-                                   player_collider.radius * 0.8f, 
+                                   player_collider.radius * 0.95f, 
                                    ground);
     }
 
@@ -197,5 +203,17 @@ public class RPGCharacterController : MonoBehaviour
 
         weapon_armed.SetActive(true);
         weapon_sheathed.SetActive(false);
+    }
+
+    public void PlayDoubleJumpParticles()
+    {
+        foreach (GameObject collectable in active_collectables)
+        {
+            if (collectable.GetComponent<DoubleJump>() != null)
+            {
+                collectable.GetComponent<DoubleJump>().PlayParticles();
+                break;
+            }
+        }
     }
 }
