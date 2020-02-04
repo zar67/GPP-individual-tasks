@@ -114,7 +114,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 494}
   m_MaxSize: {x: 14004, y: 14044}
   vertical: 0
-  controlID: 140
+  controlID: 59
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -384,23 +384,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: c6290000
+      m_SelectedIDs: b6350000
       m_LastClickedID: 0
-      m_ExpandedIDs: 74fbffff
+      m_ExpandedIDs: 58fbffff74fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: 
-        m_OriginalName: 
+        m_Name: SB Player Particles
+        m_OriginalName: SB Player Particles
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 0
+        m_UserData: -2886
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 11
+        m_OriginalEventType: 4
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 8}
       m_SearchString: 
@@ -441,14 +441,14 @@ MonoBehaviour:
   m_Gizmos: 1
   m_SceneIsLit: 1
   m_SceneLighting: 1
-  m_2DMode: 1
+  m_2DMode: 0
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 45.428272, y: 37.061745, z: -7.21875}
+    m_Target: {x: -0.17770334, y: 0.89737874, z: -0.25424376}
     speed: 2
-    m_Value: {x: 45.428272, y: 37.061745, z: -7.21875}
+    m_Value: {x: -0.17770334, y: 0.89737874, z: -0.25424376}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -469,25 +469,25 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
     yGrid:
-      m_Target: 0
-      speed: 2
-      m_Value: 0
-    zGrid:
       m_Target: 1
       speed: 2
       m_Value: 1
+    zGrid:
+      m_Target: 0
+      speed: 2
+      m_Value: 0
   m_Rotation:
-    m_Target: {x: 0, y: 0, z: 0, w: 1}
+    m_Target: {x: -0.04786666, y: 0.8993396, z: -0.10188675, w: -0.4225119}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0, w: 1}
+    m_Value: {x: -0.04786666, y: 0.8993396, z: -0.10188675, w: -0.4225119}
   m_Size:
-    m_Target: 157.9698
+    m_Target: 4.494217
     speed: 2
-    m_Value: 157.9698
+    m_Value: 4.494217
   m_Ortho:
-    m_Target: 1
+    m_Target: 0
     speed: 2
-    m_Value: 1
+    m_Value: 0
   m_CameraSettings:
     m_Speed: 1
     m_SpeedNormalized: 0.49000046
@@ -719,19 +719,19 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Avatar
+    - Assets/Prefabs/Collectables/Particles/Speed Boost
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/Avatar
+  - Assets/Prefabs/Collectables/Particles/Speed Boost
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Gameplay-Programming-Tasks\Gameplay Programming
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 39}
-    m_SelectedIDs: fc310000
-    m_LastClickedID: 12796
+    scrollPos: {x: 0, y: 71}
+    m_SelectedIDs: 8c350000
+    m_LastClickedID: 13708
     m_ExpandedIDs: 00000000b62e0000fe2e000070300000aa300000083500002c3500008435000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0

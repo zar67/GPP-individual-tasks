@@ -58,7 +58,7 @@ public class Collectable : MonoBehaviour
             }
             if (player_particles_prefab != null)
             {
-                player_particles = Instantiate(player_particles_prefab, transform.position, transform.rotation, GameObject.FindGameObjectWithTag("Player").transform);
+                player_particles = Instantiate(player_particles_prefab, player.gameObject.transform.position, Quaternion.identity, player.gameObject.transform);
             }
 
             collected = true;
