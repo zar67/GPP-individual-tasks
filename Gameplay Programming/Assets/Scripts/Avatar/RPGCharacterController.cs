@@ -110,6 +110,9 @@ public class RPGCharacterController : MonoBehaviour
             if (IsGrounded())
             {
                 player_animator.SetInteger("jumping", 1);
+                Vector3 position = player_rb.gameObject.transform.position;
+                position.y += 0.2f;
+                player_rb.gameObject.transform.position = position;
                 player_rb.velocity = Vector3.up * jump_force;
                 PlayDoubleJumpParticles();
             }
