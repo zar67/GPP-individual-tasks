@@ -23,12 +23,12 @@ public class Collectable : MonoBehaviour
     [HideInInspector]
     public RPGCharacterController player;
 
-    private void Awake()
+    public void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<RPGCharacterController>();
     }
 
-    private void Update()
+    public void Update()
     {
         if (collected)
         {
@@ -37,6 +37,7 @@ public class Collectable : MonoBehaviour
             if (elapsed_time >= collectible_time_limit)
             {
                 Disable();
+                player.active_collectables.Remove(gameObject);
                 Destroy(player_particles);
                 Destroy(gameObject);
             }
@@ -61,6 +62,7 @@ public class Collectable : MonoBehaviour
             }
 
             collected = true;
+            other.GetComponent<RPGCharacterController>().active_collectables.Add(gameObject);
             Pickup();
 
             gameObject.GetComponent<MeshRenderer>().enabled = false;

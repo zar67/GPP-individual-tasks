@@ -13,4 +13,9 @@ public class DoubleJump : Collectable
     {
         player.can_double_jump = false;
     }
+
+    public void PlayParticles()
+    {
+        Instantiate(player_particles_prefab, player.gameObject.transform);
+    }
 }
