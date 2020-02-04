@@ -16,6 +16,6 @@ public class DoubleJump : Collectable
 
     public void PlayParticles()
     {
-        Instantiate(player_particles_prefab, player.gameObject.transform);
+        Instantiate(player_particles_prefab, player.gameObject.transform.position, player.gameObject.transform.rotation, player.gameObject.transform);
     }
 }
