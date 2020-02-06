@@ -130,11 +130,14 @@ MonoBehaviour:
     m_Bits: 512
   move_speed: 7
   rotate_speed: 150
+  can_double_jump: 0
   jump_force: 10
   double_jump_force: 8
+  double_jump: 0
   weapon_sheathed: {fileID: 6000598737609651047}
   weapon_armed: {fileID: 6635071979757852881}
   current_weapon: 0
+  active_collectables: []
 --- !u!1001 &5183925942248846636
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146,13 +149,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: RPG-Character
       objectReference: {fileID: 0}
+    - target: {fileID: 100050, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 20bf88ed6a3bbe1409a60c8bb60c3949, type: 2}
+    - target: {fileID: 9500000, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -188,14 +203,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9500000, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 20bf88ed6a3bbe1409a60c8bb60c3949, type: 2}
-    - target: {fileID: 9500000, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
-      propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 13700004, guid: e42d9259129992a4d95e0b320ca2a43d, type: 3}
@@ -241,15 +248,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.541
+      value: -0.607
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3
+      value: -0.304
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.403
+      value: -0.423
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
       propertyPath: m_LocalRotation.x
@@ -301,6 +308,10 @@ PrefabInstance:
     - target: {fileID: 100050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
       propertyPath: m_Name
       value: Weapon_Wielded
+      objectReference: {fileID: 0}
+    - target: {fileID: 100050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400050, guid: 9b8801d8aa383584b8c3f62346c33539, type: 3}
       propertyPath: m_LocalPosition.x

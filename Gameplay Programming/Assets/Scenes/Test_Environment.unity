@@ -930,7 +930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &464400549
 Transform:
   m_ObjectHideFlags: 0
@@ -1681,7 +1681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1534888715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2229,6 +2229,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Speed Boost
       objectReference: {fileID: 0}
+    - target: {fileID: 4572874134306139978, guid: 44ffc58111917a54dbb0bc8d7b076011,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4572874134306139981, guid: 44ffc58111917a54dbb0bc8d7b076011,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2304,11 +2309,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RPG-Character
       objectReference: {fileID: 0}
-    - target: {fileID: 5183925942248879102, guid: 4ee1952d0080ce840be0079cfdd2e3bc,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 5183925942248714142, guid: 4ee1952d0080ce840be0079cfdd2e3bc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2364,15 +2364,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6635071979757852881, guid: 4ee1952d0080ce840be0079cfdd2e3bc,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 707133770, guid: 4ee1952d0080ce840be0079cfdd2e3bc, type: 3}
-      propertyPath: m_Constraints
-      value: 112
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ee1952d0080ce840be0079cfdd2e3bc, type: 3}
 --- !u!1001 &7469376947696903873
@@ -2386,6 +2377,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Double Jump
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469376947722254251, guid: 83ae49483a8836d428c66a4a02605eea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7469376947722254254, guid: 83ae49483a8836d428c66a4a02605eea,
         type: 3}

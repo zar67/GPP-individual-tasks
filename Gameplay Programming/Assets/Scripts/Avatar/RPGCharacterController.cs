@@ -142,16 +142,16 @@ public class RPGCharacterController : MonoBehaviour
 
         if (player_rb.velocity.y <= 0)
         {
-            // Fall
-            if (!IsGrounded())
-            {
-                player_animator.SetInteger("jumping", 2);
-            }
             // Land
-            else if (player_animator.GetInteger("jumping") == 2)
+            if (IsGrounded())
             {
                 player_animator.SetInteger("jumping", 0);
                 double_jump = false;
+            }
+            // Fall
+            else
+            {
+                player_animator.SetInteger("jumping", 2);
             }
         }
     }
@@ -199,7 +199,7 @@ public class RPGCharacterController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y, player_collider.bounds.center.z), 
+        return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y + (player_collider.radius * 0.95f), player_collider.bounds.center.z), 
                                    player_collider.radius * 0.95f, 
                                    ground);
     }
