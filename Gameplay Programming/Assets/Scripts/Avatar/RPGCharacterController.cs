@@ -12,13 +12,18 @@ public class RPGCharacterController : MonoBehaviour
 {    
     public LayerMask ground;
 
+    [HideInInspector]
+    public bool accept_input = true;
+
     // Movement Variables
     public const int base_move_speed = 7;
     public const int strafe_move_speed = 5;
+    [HideInInspector]
     public float move_speed = 7;
     public float rotate_speed = 125;
 
     // Jump Variables
+    [HideInInspector]
     public bool can_double_jump = false;
     public float jump_force = 10;
     public float double_jump_force = 8;
@@ -57,109 +62,120 @@ public class RPGCharacterController : MonoBehaviour
 
     void Update()
     {
-        UpdateAnimator();
-
-        // Rotate
-        transform.Rotate(-Vector3.up * -Input.GetAxis("Horizontal") * rotate_speed * Time.deltaTime);
-
-        // Arm
-        if (player_animator.GetBool("armed"))
+        if (accept_input)
         {
-            armed_timer += Time.deltaTime;
+            UpdateAnimator();
 
-            if (armed_timer >= armed_delay)
+            // Rotate
+            transform.Rotate(-Vector3.up * -Input.GetAxis("Horizontal") * rotate_speed * Time.deltaTime);
+
+            // Arm
+            if (player_animator.GetBool("armed"))
             {
-                StartCoroutine(Sheath());
-                armed_timer = 0;
-            }
-        }
+                armed_timer += Time.deltaTime;
 
-        // Set Jump Bools
-        if (Input.GetButtonDown("Jump"))
-        {
-            // Jump
-            if (IsGrounded())
-            {
-                set_jump = true;
+                if (armed_timer >= armed_delay)
+                {
+                    StartCoroutine(Sheath());
+                    armed_timer = 0;
+                }
             }
-            // Double Jump
-            else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !double_jump)
-            {
-                set_double_jump = true;
-            }
-        }
 
-        // Strafe
-        if (Input.GetAxis("Strafe") != 0)
-        {
-            move_speed = strafe_move_speed;
-            player_animator.SetBool("strafe", true);
-        }
-        else
-        {
-            move_speed = base_move_speed;
-            player_animator.SetBool("strafe", false);
+            // Set Jump Bools
+            if (Input.GetButtonDown("Jump"))
+            {
+                // Jump
+                if (IsGrounded())
+                {
+                    set_jump = true;
+                }
+                // Double Jump
+                else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !double_jump)
+                {
+                    set_double_jump = true;
+                }
+            }
+
+            // Strafe
+            if (Input.GetAxis("Strafe") != 0)
+            {
+                move_speed = strafe_move_speed;
+                player_animator.SetBool("strafe", true);
+            }
+            else
+            {
+                move_speed = base_move_speed;
+                player_animator.SetBool("strafe", false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                Death();
+            }
         }
     }
 
     void FixedUpdate()
     {
-        // Move
-        Vector3 velocity = Vector3.zero;
+        if (accept_input)
+        {
+            // Move
+            Vector3 velocity = Vector3.zero;
 
-        float movement = Input.GetAxis("Vertical");
-        if (movement > 0.1)
-        {
-            velocity = transform.forward * move_speed;
-        }
-        else if (movement < -0.1)
-        {
-            velocity = -transform.forward * move_speed;
-        }
-
-        if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
-        {
-            velocity.y = 0;
-        }
-        else
-        {
-            velocity.y = player_rb.velocity.y;
-        }
-
-        player_rb.velocity = velocity;
-
-        if (set_jump)
-        {
-            set_jump = false;
-            player_animator.SetInteger("jumping", 1);
-            Vector3 position = player_rb.gameObject.transform.position;
-            position.y += 0.5f;
-            player_rb.gameObject.transform.position = position;
-            player_rb.velocity = Vector3.up * jump_force;
-            PlayDoubleJumpParticles();
-        }
-
-        if (set_double_jump)
-        {
-            set_double_jump = false;
-            double_jump = true;
-            player_animator.Play("Double Jump", 0);
-            player_rb.velocity = Vector3.up * double_jump_force;
-            PlayDoubleJumpParticles();
-        }
-
-        if (player_rb.velocity.y <= 0)
-        {
-            // Land
-            if (IsGrounded())
+            float movement = Input.GetAxis("Vertical");
+            if (movement > 0.1)
             {
-                player_animator.SetInteger("jumping", 0);
-                double_jump = false;
+                velocity = transform.forward * move_speed;
             }
-            // Fall
+            else if (movement < -0.1)
+            {
+                velocity = -transform.forward * move_speed;
+            }
+
+            if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
+            {
+                velocity.y = 0;
+            }
             else
             {
-                player_animator.SetInteger("jumping", 2);
+                velocity.y = player_rb.velocity.y;
+            }
+
+            player_rb.velocity = velocity;
+
+            if (set_jump)
+            {
+                set_jump = false;
+                player_animator.SetInteger("jumping", 1);
+                Vector3 position = player_rb.gameObject.transform.position;
+                position.y += 0.5f;
+                player_rb.gameObject.transform.position = position;
+                player_rb.velocity = Vector3.up * jump_force;
+                PlayDoubleJumpParticles();
+            }
+
+            if (set_double_jump)
+            {
+                set_double_jump = false;
+                double_jump = true;
+                player_animator.Play("Double Jump", 0);
+                player_rb.velocity = Vector3.up * double_jump_force;
+                PlayDoubleJumpParticles();
+            }
+
+            if (player_rb.velocity.y <= 0)
+            {
+                // Land
+                if (IsGrounded())
+                {
+                    player_animator.SetInteger("jumping", 0);
+                    double_jump = false;
+                }
+                // Fall
+                else
+                {
+                    player_animator.SetInteger("jumping", 2);
+                }
             }
         }
     }
@@ -258,5 +274,27 @@ public class RPGCharacterController : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void ResetAnimator()
+    {
+        player_animator.SetInteger("jumping", 0);
+        player_animator.SetFloat("vertical_input", 0);
+        player_animator.SetFloat("turning_input", 0);
+        player_animator.SetInteger("attack", 0);
+        player_animator.SetInteger("kick", 0);
+        player_animator.SetBool("strafe", false);
+    }
+
+    public void Death()
+    {
+        player_animator.SetTrigger("death");
+        accept_input = false;
+        ResetAnimator();
+    }
+
+    public void DamagePlayer()
+    {
+
     }
 }
