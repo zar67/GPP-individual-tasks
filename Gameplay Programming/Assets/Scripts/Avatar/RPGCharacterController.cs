@@ -184,9 +184,16 @@ public class RPGCharacterController : MonoBehaviour
     {
         // Move
         player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
-
-        // Rotate
         player_animator.SetFloat("horizontal_input", -Input.GetAxis("Horizontal"));
+        
+        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        {
+            player_animator.SetBool("move", true);
+        }
+        else
+        {
+            player_animator.SetBool("move", false);
+        }
 
         // Attack
         if (Input.GetButtonDown("Attack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
