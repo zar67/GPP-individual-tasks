@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class RPGCameraController : MonoBehaviour
 {
-    public Transform player;
+    public Transform target;
 
     Vector3 offset;
 
     void Awake()
     {
-        offset = transform.position - player.position;
+        offset = target.position - transform.position;
     }
 
     void LateUpdate()
     {
-        transform.position = player.position + offset;
-        
-        // If Input
-        // Lerp to next 90 degree angle
+        transform.position = target.position - offset;
+        transform.LookAt(target.position);
     }
 }

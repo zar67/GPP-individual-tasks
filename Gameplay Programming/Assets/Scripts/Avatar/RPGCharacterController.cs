@@ -9,7 +9,10 @@ public enum Weapons
 }
 
 public class RPGCharacterController : MonoBehaviour
-{    
+{
+    // Camera
+    public Transform camera;
+
     public LayerMask ground;
 
     [HideInInspector]
@@ -67,7 +70,7 @@ public class RPGCharacterController : MonoBehaviour
             UpdateAnimator();
 
             // Rotate
-            transform.Rotate(-Vector3.up * -Input.GetAxis("Horizontal") * rotate_speed * Time.deltaTime);
+            //transform.Rotate(-Vector3.up * -Input.GetAxis("Horizontal") * rotate_speed * Time.deltaTime);
 
             // Arm
             if (player_animator.GetBool("armed"))
@@ -120,16 +123,13 @@ public class RPGCharacterController : MonoBehaviour
         if (accept_input)
         {
             // Move
-            Vector3 velocity = Vector3.zero;
+            Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
 
-            float movement = Input.GetAxis("Vertical");
-            if (movement > 0.1)
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
-                velocity = transform.forward * move_speed;
-            }
-            else if (movement < -0.1)
-            {
-                velocity = -transform.forward * move_speed;
+                transform.rotation = Quaternion.Euler(0f, camera.rotation.eulerAngles.y, 0f);
+                Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
+                transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
             }
 
             if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
@@ -186,7 +186,7 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
 
         // Rotate
-        player_animator.SetFloat("turning_input", -Input.GetAxis("Horizontal"));
+        player_animator.SetFloat("horizontal_input", -Input.GetAxis("Horizontal"));
 
         // Attack
         if (Input.GetButtonDown("Attack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
@@ -233,7 +233,7 @@ public class RPGCharacterController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y + (player_collider.radius * 0.95f), player_collider.bounds.center.z), 
+        return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y + (player_collider.radius * 0.9f), player_collider.bounds.center.z), 
                                    player_collider.radius * 0.95f, 
                                    ground);
     }
