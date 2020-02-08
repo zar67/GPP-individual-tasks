@@ -8,20 +8,15 @@ public enum Weapons
     TWO_HANDED_SWORD
 }
 
-// TODO: Rolling
-// TODO: Kicks
-// TODO: Death
-// TODO: Hit
-// TODO: Stunned
-
 public class RPGCharacterController : MonoBehaviour
 {    
     public LayerMask ground;
 
     // Movement Variables
     public const int base_move_speed = 7;
+    public const int strafe_move_speed = 5;
     public float move_speed = 7;
-    public float rotate_speed = 150;
+    public float rotate_speed = 125;
 
     // Jump Variables
     public bool can_double_jump = false;
@@ -79,6 +74,7 @@ public class RPGCharacterController : MonoBehaviour
             }
         }
 
+        // Set Jump Bools
         if (Input.GetButtonDown("Jump"))
         {
             // Jump
@@ -91,6 +87,18 @@ public class RPGCharacterController : MonoBehaviour
             {
                 set_double_jump = true;
             }
+        }
+
+        // Strafe
+        if (Input.GetAxis("Strafe") != 0)
+        {
+            move_speed = strafe_move_speed;
+            player_animator.SetBool("strafe", true);
+        }
+        else
+        {
+            move_speed = base_move_speed;
+            player_animator.SetBool("strafe", false);
         }
     }
 
@@ -173,6 +181,16 @@ public class RPGCharacterController : MonoBehaviour
         else
         {
             player_animator.SetInteger("attack", 0);
+        }
+
+        // Kick
+        if (Input.GetButtonDown("Kick") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        {
+            player_animator.SetInteger("kick", Random.Range(1, 3));
+        }
+        else
+        {
+            player_animator.SetInteger("kick", 0);
         }
 
         // Wield
