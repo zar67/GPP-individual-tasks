@@ -18,7 +18,8 @@ public class Collectable : MonoBehaviour
 
     // Respawning
     bool active = true;
-    float respawn_delay = 5f;
+    public bool can_respawn = false;
+    public float respawn_delay = 5f;
     float respawn_timer = 0;
 
     // Rotation
@@ -56,7 +57,7 @@ public class Collectable : MonoBehaviour
         {
             transform.Rotate(Vector3.up * Time.deltaTime * rotate_speed);
         }
-        else
+        else if (can_respawn)
         {
             respawn_timer += Time.deltaTime;
 
