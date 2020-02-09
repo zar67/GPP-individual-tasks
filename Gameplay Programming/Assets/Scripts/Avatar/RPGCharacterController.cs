@@ -8,22 +8,25 @@ public enum Weapons
     TWO_HANDED_SWORD
 }
 
-// TODO: Rolling
-// TODO: Kicks
-// TODO: Death
-// TODO: Hit
-// TODO: Stunned
-
 public class RPGCharacterController : MonoBehaviour
-{    
+{
+    // Camera
+    public Transform camera;
+
     public LayerMask ground;
+
+    [HideInInspector]
+    public bool accept_input = true;
 
     // Movement Variables
     public const int base_move_speed = 7;
+    public const int strafe_move_speed = 5;
+    [HideInInspector]
     public float move_speed = 7;
-    public float rotate_speed = 150;
+    public float rotate_speed = 125;
 
     // Jump Variables
+    [HideInInspector]
     public bool can_double_jump = false;
     public float jump_force = 10;
     public float double_jump_force = 8;
@@ -62,96 +65,111 @@ public class RPGCharacterController : MonoBehaviour
 
     void Update()
     {
-        UpdateAnimator();
-
-        // Rotate
-        transform.Rotate(-Vector3.up * -Input.GetAxis("Horizontal") * rotate_speed * Time.deltaTime);
-
-        // Arm
-        if (player_animator.GetBool("armed"))
+        if (accept_input)
         {
-            armed_timer += Time.deltaTime;
+            UpdateAnimator();
 
-            if (armed_timer >= armed_delay)
+            // Arm
+            if (player_animator.GetBool("armed"))
             {
-                StartCoroutine(Sheath());
-                armed_timer = 0;
-            }
-        }
+                armed_timer += Time.deltaTime;
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            // Jump
-            if (IsGrounded())
-            {
-                set_jump = true;
+                if (armed_timer >= armed_delay)
+                {
+                    StartCoroutine(Sheath());
+                    armed_timer = 0;
+                }
             }
-            // Double Jump
-            else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !double_jump)
+
+            // Set Jump Bools
+            if (Input.GetButtonDown("Jump"))
             {
-                set_double_jump = true;
+                // Jump
+                if (IsGrounded())
+                {
+                    set_jump = true;
+                }
+                // Double Jump
+                else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !double_jump)
+                {
+                    set_double_jump = true;
+                }
+            }
+
+            // Strafe
+            if (Input.GetAxis("Strafe") != 0)
+            {
+                move_speed = strafe_move_speed;
+                player_animator.SetBool("strafe", true);
+            }
+            else
+            {
+                move_speed = base_move_speed;
+                player_animator.SetBool("strafe", false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                Death();
             }
         }
     }
 
     void FixedUpdate()
     {
-        // Move
-        Vector3 velocity = Vector3.zero;
+        if (accept_input)
+        {
+            // Move
+            Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
 
-        float movement = Input.GetAxis("Vertical");
-        if (movement > 0.1)
-        {
-            velocity = transform.forward * move_speed;
-        }
-        else if (movement < -0.1)
-        {
-            velocity = -transform.forward * move_speed;
-        }
-
-        if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
-        {
-            velocity.y = 0;
-        }
-        else
-        {
-            velocity.y = player_rb.velocity.y;
-        }
-
-        player_rb.velocity = velocity;
-
-        if (set_jump)
-        {
-            set_jump = false;
-            player_animator.SetInteger("jumping", 1);
-            Vector3 position = player_rb.gameObject.transform.position;
-            position.y += 0.5f;
-            player_rb.gameObject.transform.position = position;
-            player_rb.velocity = Vector3.up * jump_force;
-            PlayDoubleJumpParticles();
-        }
-
-        if (set_double_jump)
-        {
-            set_double_jump = false;
-            double_jump = true;
-            player_animator.Play("Double Jump", 0);
-            player_rb.velocity = Vector3.up * double_jump_force;
-            PlayDoubleJumpParticles();
-        }
-
-        if (player_rb.velocity.y <= 0)
-        {
-            // Land
-            if (IsGrounded())
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
-                player_animator.SetInteger("jumping", 0);
-                double_jump = false;
+                transform.rotation = Quaternion.Euler(0f, camera.rotation.eulerAngles.y, 0f);
+                Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
+                transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
             }
-            // Fall
+
+            if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
+            {
+                velocity.y = 0;
+            }
             else
             {
-                player_animator.SetInteger("jumping", 2);
+                velocity.y = player_rb.velocity.y;
+            }
+
+            player_rb.velocity = velocity;
+
+            if (set_jump)
+            {
+                set_jump = false;
+                player_animator.SetInteger("jumping", 1);
+                player_rb.velocity = Vector3.up * jump_force;
+                PlayDoubleJumpParticles();
+            }
+
+            if (set_double_jump)
+            {
+                set_double_jump = false;
+                double_jump = true;
+                player_animator.Play("Double Jump", 0);
+                player_rb.velocity = Vector3.up * double_jump_force;
+                PlayDoubleJumpParticles();
+            }
+
+            if (player_rb.velocity.y <= 0)
+            {
+                // Land
+                if (IsGrounded())
+                {
+                    player_animator.SetInteger("jumping", 0);
+                    double_jump = false;
+                }
+                // Fall
+                else
+                {
+                    player_animator.SetInteger("jumping", 2);
+                }
             }
         }
     }
@@ -160,9 +178,16 @@ public class RPGCharacterController : MonoBehaviour
     {
         // Move
         player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
-
-        // Rotate
-        player_animator.SetFloat("turning_input", -Input.GetAxis("Horizontal"));
+        player_animator.SetFloat("horizontal_input", -Input.GetAxis("Horizontal"));
+        
+        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        {
+            player_animator.SetBool("move", true);
+        }
+        else
+        {
+            player_animator.SetBool("move", false);
+        }
 
         // Attack
         if (Input.GetButtonDown("Attack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
@@ -173,6 +198,16 @@ public class RPGCharacterController : MonoBehaviour
         else
         {
             player_animator.SetInteger("attack", 0);
+        }
+
+        // Kick
+        if (Input.GetButtonDown("Kick") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        {
+            player_animator.SetInteger("kick", Random.Range(1, 3));
+        }
+        else
+        {
+            player_animator.SetInteger("kick", 0);
         }
 
         // Wield
@@ -199,7 +234,7 @@ public class RPGCharacterController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y + (player_collider.radius * 0.95f), player_collider.bounds.center.z), 
+        return Physics.CheckSphere(new Vector3(player_collider.bounds.center.x, player_collider.bounds.min.y + (player_collider.radius * 0.9f), player_collider.bounds.center.z), 
                                    player_collider.radius * 0.95f, 
                                    ground);
     }
@@ -209,6 +244,7 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetBool("armed", false);
         player_animator.SetLayerWeight(1, 0);
         player_animator.SetLayerWeight(3, 0);
+        player_animator.SetLayerWeight(5, 0);
         player_animator.Play("Sheath");
 
         yield return new WaitForSeconds(0.5f);
@@ -222,6 +258,7 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetBool("armed", true);
         player_animator.SetLayerWeight(1, 1);
         player_animator.SetLayerWeight(3, 1);
+        player_animator.SetLayerWeight(5, 1);
         player_animator.Play("Draw Sword");
 
         yield return new WaitForSeconds(0.25f);
@@ -240,5 +277,27 @@ public class RPGCharacterController : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void ResetAnimator()
+    {
+        player_animator.SetInteger("jumping", 0);
+        player_animator.SetFloat("vertical_input", 0);
+        player_animator.SetFloat("turning_input", 0);
+        player_animator.SetInteger("attack", 0);
+        player_animator.SetInteger("kick", 0);
+        player_animator.SetBool("strafe", false);
+    }
+
+    public void Death()
+    {
+        player_animator.SetTrigger("death");
+        accept_input = false;
+        ResetAnimator();
+    }
+
+    public void DamagePlayer()
+    {
+
     }
 }
