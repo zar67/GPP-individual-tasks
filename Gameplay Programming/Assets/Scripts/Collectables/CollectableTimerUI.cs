@@ -20,8 +20,8 @@ public class CollectableTimerUI : MonoBehaviour
     {
         if (collectable != null && collectable.collected)
         {
-            Vector2 rectangle = new Vector2(8 + (player.active_collectables.IndexOf(collectable.gameObject) * 48), 48);
-            GetComponent<RectTransform>().position = rectangle;
+            //Vector2 rectangle = new Vector2(8 + (player.active_collectables.IndexOf(collectable.gameObject) * 48), 48);
+            //GetComponent<RectTransform>().position = rectangle;
             image.fillAmount = (collectable.collectible_time_limit - collectable.elapsed_time) / collectable.collectible_time_limit;
         }
         else

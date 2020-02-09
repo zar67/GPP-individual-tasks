@@ -21,7 +21,7 @@ public class RPGCharacterController : MonoBehaviour
     // Movement Variables
     public const int base_move_speed = 7;
     public const int strafe_move_speed = 5;
-    [HideInInspector]
+
     public float move_speed = 7;
     public float rotate_speed = 125;
 
@@ -36,7 +36,7 @@ public class RPGCharacterController : MonoBehaviour
     public bool set_double_jump = false;
 
     [HideInInspector]
-    public bool double_jump = false;
+    public bool has_double_jumped = false;
 
     // Arming Variables
     public GameObject weapon_sheathed;
@@ -46,7 +46,8 @@ public class RPGCharacterController : MonoBehaviour
     float armed_delay = 5;
 
     // Collectables
-    public List<GameObject> active_collectables;
+    public SpeedBoost speed_boost;
+    public DoubleJump double_jump;
 
     // Component References
     Animator player_animator;
@@ -92,7 +93,7 @@ public class RPGCharacterController : MonoBehaviour
                     set_jump = true;
                 }
                 // Double Jump
-                else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !double_jump)
+                else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !has_double_jumped)
                 {
                     set_double_jump = true;
                 }
@@ -101,12 +102,28 @@ public class RPGCharacterController : MonoBehaviour
             // Strafe
             if (Input.GetAxis("Strafe") != 0)
             {
-                move_speed = strafe_move_speed;
+                if (speed_boost != null)
+                {
+                    move_speed = strafe_move_speed * 2;
+                }
+                else
+                {
+                    move_speed = strafe_move_speed;
+                }
+
                 player_animator.SetBool("strafe", true);
             }
             else
             {
-                move_speed = base_move_speed;
+                if (speed_boost != null)
+                {
+                    move_speed = base_move_speed * 2;
+                }
+                else
+                {
+                    move_speed = base_move_speed;
+                }
+
                 player_animator.SetBool("strafe", false);
             }
 
@@ -152,7 +169,7 @@ public class RPGCharacterController : MonoBehaviour
             if (set_double_jump)
             {
                 set_double_jump = false;
-                double_jump = true;
+                has_double_jumped = true;
                 player_animator.Play("Double Jump", 0);
                 player_rb.velocity = Vector3.up * double_jump_force;
             }
@@ -163,7 +180,7 @@ public class RPGCharacterController : MonoBehaviour
                 if (IsGrounded())
                 {
                     player_animator.SetInteger("jumping", 0);
-                    double_jump = false;
+                    has_double_jumped = false;
                 }
                 // Fall
                 else

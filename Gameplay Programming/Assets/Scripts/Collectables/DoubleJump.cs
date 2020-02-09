@@ -16,11 +16,13 @@ public class DoubleJump : Collectable
 
     public override void Pickup()
     {
+        player.double_jump = this;
         player.can_double_jump = true;
     }
 
     public override void Disable()
     {
+        player.double_jump = null;
         player.can_double_jump = false;
     }
 }
