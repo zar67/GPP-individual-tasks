@@ -244,6 +244,7 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetBool("armed", false);
         player_animator.SetLayerWeight(1, 0);
         player_animator.SetLayerWeight(3, 0);
+        player_animator.SetLayerWeight(5, 0);
         player_animator.Play("Sheath");
 
         yield return new WaitForSeconds(0.5f);
@@ -257,6 +258,7 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetBool("armed", true);
         player_animator.SetLayerWeight(1, 1);
         player_animator.SetLayerWeight(3, 1);
+        player_animator.SetLayerWeight(5, 1);
         player_animator.Play("Draw Sword");
 
         yield return new WaitForSeconds(0.25f);
