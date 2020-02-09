@@ -8,7 +8,7 @@ public class DoubleJump : Collectable
     {
         base.Update();
 
-        if (player.set_jump || player.set_double_jump)
+        if (player.double_jump == this && (player.set_jump || player.set_double_jump))
         {
             Instantiate(player_particles_prefab, player.gameObject.transform.position, player.gameObject.transform.rotation, player.gameObject.transform);
         }
@@ -22,7 +22,10 @@ public class DoubleJump : Collectable
 
     public override void Disable()
     {
-        player.double_jump = null;
-        player.can_double_jump = false;
+        if (player.double_jump == this)
+        {
+            player.double_jump = null;
+            player.can_double_jump = false;
+        }
     }
 }
