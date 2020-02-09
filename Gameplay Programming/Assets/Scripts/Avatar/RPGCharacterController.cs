@@ -69,9 +69,6 @@ public class RPGCharacterController : MonoBehaviour
         {
             UpdateAnimator();
 
-            // Rotate
-            //transform.Rotate(-Vector3.up * -Input.GetAxis("Horizontal") * rotate_speed * Time.deltaTime);
-
             // Arm
             if (player_animator.GetBool("armed"))
             {
@@ -147,9 +144,6 @@ public class RPGCharacterController : MonoBehaviour
             {
                 set_jump = false;
                 player_animator.SetInteger("jumping", 1);
-                Vector3 position = player_rb.gameObject.transform.position;
-                position.y += 0.5f;
-                player_rb.gameObject.transform.position = position;
                 player_rb.velocity = Vector3.up * jump_force;
                 PlayDoubleJumpParticles();
             }
