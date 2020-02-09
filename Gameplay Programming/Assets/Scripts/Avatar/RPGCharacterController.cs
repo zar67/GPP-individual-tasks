@@ -11,7 +11,7 @@ public enum Weapons
 public class RPGCharacterController : MonoBehaviour
 {
     // Camera
-    public Transform camera;
+    public Transform player_camera;
 
     public LayerMask ground;
 
@@ -30,8 +30,10 @@ public class RPGCharacterController : MonoBehaviour
     public bool can_double_jump = false;
     public float jump_force = 10;
     public float double_jump_force = 8;
-    bool set_jump = false;
-    bool set_double_jump = false;
+    [HideInInspector]
+    public bool set_jump = false;
+    [HideInInspector]
+    public bool set_double_jump = false;
 
     [HideInInspector]
     public bool double_jump = false;
@@ -124,7 +126,7 @@ public class RPGCharacterController : MonoBehaviour
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
-                transform.rotation = Quaternion.Euler(0f, camera.rotation.eulerAngles.y, 0f);
+                transform.rotation = Quaternion.Euler(0f, player_camera.rotation.eulerAngles.y, 0f);
                 Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
             }
@@ -145,7 +147,6 @@ public class RPGCharacterController : MonoBehaviour
                 set_jump = false;
                 player_animator.SetInteger("jumping", 1);
                 player_rb.velocity = Vector3.up * jump_force;
-                PlayDoubleJumpParticles();
             }
 
             if (set_double_jump)
@@ -154,7 +155,6 @@ public class RPGCharacterController : MonoBehaviour
                 double_jump = true;
                 player_animator.Play("Double Jump", 0);
                 player_rb.velocity = Vector3.up * double_jump_force;
-                PlayDoubleJumpParticles();
             }
 
             if (player_rb.velocity.y <= 0)
@@ -265,18 +265,6 @@ public class RPGCharacterController : MonoBehaviour
 
         weapon_armed.SetActive(true);
         weapon_sheathed.SetActive(false);
-    }
-
-    public void PlayDoubleJumpParticles()
-    {
-        foreach (GameObject collectable in active_collectables)
-        {
-            if (collectable.GetComponent<DoubleJump>() != null)
-            {
-                collectable.GetComponent<DoubleJump>().PlayParticles();
-                break;
-            }
-        }
     }
 
     public void ResetAnimator()

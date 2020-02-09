@@ -28,7 +28,7 @@ public class Collectable : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<RPGCharacterController>();
     }
 
-    public void Update()
+    public virtual void Update()
     {
         if (collected)
         {
