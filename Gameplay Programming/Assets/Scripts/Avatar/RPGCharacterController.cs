@@ -139,10 +139,13 @@ public class RPGCharacterController : MonoBehaviour
         if (accept_input)
         {
             // Move
-            Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
+            //Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
+            Vector3 velocity = (player_camera.transform.forward * Input.GetAxis("Vertical")) + (player_camera.transform.right * Input.GetAxis("Horizontal"));
+            velocity = velocity.normalized * move_speed;
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
+                // 
                 transform.rotation = Quaternion.Euler(0f, player_camera.rotation.eulerAngles.y, 0f);
                 Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);

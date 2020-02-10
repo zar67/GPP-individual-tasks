@@ -9,10 +9,10 @@ InputManager:
     m_Name: Horizontal
     descriptiveName: Turn Player Left
     descriptiveNegativeName: Turn Player Right
-    negativeButton: left
-    positiveButton: right
-    altNegativeButton: a
-    altPositiveButton: d
+    negativeButton: a
+    positiveButton: d
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 3
     dead: 0.001
     sensitivity: 1
@@ -25,10 +25,10 @@ InputManager:
     m_Name: Horizontal
     descriptiveName: Turn Player Left
     descriptiveNegativeName: Turn Player Right
-    negativeButton: left
-    positiveButton: right
-    altNegativeButton: a
-    altPositiveButton: d
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 3
     dead: 0.001
     sensitivity: 1
@@ -41,10 +41,10 @@ InputManager:
     m_Name: Vertical
     descriptiveName: Move Player Forward
     descriptiveNegativeName: Move Player Backward
-    negativeButton: down
-    positiveButton: up
-    altNegativeButton: s
-    altPositiveButton: w
+    negativeButton: s
+    positiveButton: w
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 3
     dead: 0.001
     sensitivity: 3
@@ -57,10 +57,10 @@ InputManager:
     m_Name: Vertical
     descriptiveName: Move Player Forward
     descriptiveNegativeName: Move Player Backward
-    negativeButton: up
-    positiveButton: down
-    altNegativeButton: s
-    altPositiveButton: w
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 3
     dead: 0.001
     sensitivity: 3
@@ -68,6 +68,38 @@ InputManager:
     invert: 1
     type: 2
     axis: 1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera
+    descriptiveName: Rotate Camera Right
+    descriptiveNegativeName: Rotate Camera Left
+    negativeButton: right
+    positiveButton: left
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 3
+    dead: 0.001
+    sensitivity: 3
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera
+    descriptiveName: Rotate Camera Right
+    descriptiveNegativeName: Rotate Camera Left
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 3
+    dead: 0.001
+    sensitivity: 3
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 3
     joyNum: 0
   - serializedVersion: 3
     m_Name: Attack
