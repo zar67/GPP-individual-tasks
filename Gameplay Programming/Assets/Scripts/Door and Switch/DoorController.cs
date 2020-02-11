@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
+    // Close On Timer
     public bool close_after_time;
     public float close_delay;
     float close_timer = 0;
 
+    // Close On Walk Through
+    public bool close_after_walked_through;
+
+    // Component References
     Animator door_animator;
 
     private void Awake()
@@ -17,7 +22,7 @@ public class DoorController : MonoBehaviour
 
     private void Update()
     {
-        if (close_after_time && door_animator.GetCurrentAnimatorStateInfo(0).IsName("Open"))
+        if (close_after_time && !close_after_walked_through && door_animator.GetCurrentAnimatorStateInfo(0).IsName("Open"))
         {
             close_timer += Time.deltaTime;
 

@@ -1085,7 +1085,7 @@ GameObject:
   - component: {fileID: 329158575}
   - component: {fileID: 329158574}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: WalkThroughTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3712,16 +3712,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3962885272871205567, guid: 99625fe68c87b3f4080e16ae21c559fa,
-        type: 3}
-      propertyPath: close_after_time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3962885272871205565, guid: 99625fe68c87b3f4080e16ae21c559fa,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99625fe68c87b3f4080e16ae21c559fa, type: 3}
 --- !u!1001 &4572874136202229075

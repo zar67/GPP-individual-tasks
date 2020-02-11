@@ -53,17 +53,22 @@ public class DoorSwitch : MonoBehaviour
 
         if (clicked)
         {
-            if (target.close_after_time)
+            if (target.close_after_time && !target.close_after_walked_through)
             {
                 click_timer += Time.deltaTime;
 
                 if (click_timer >= click_delay)
                 {
-                    switch_animator.SetTrigger("released");
-                    clicked = false;
-                    click_timer = 0;
+                    Release();
                 }
             }
         }
+    }
+
+    void Release()
+    {
+        switch_animator.SetTrigger("released");
+        clicked = false;
+        click_timer = 0;
     }
 }

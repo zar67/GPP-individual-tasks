@@ -8,11 +8,9 @@ public class DoorTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        target.Close();
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        //target.Close();
+        if (target.close_after_walked_through)
+        {
+            target.Close();
+        }
     }
 }
