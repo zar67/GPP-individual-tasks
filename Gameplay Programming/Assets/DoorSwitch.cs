@@ -11,7 +11,6 @@ public class DoorSwitch : MonoBehaviour
     bool player_in_range = false;
 
     bool clicked = false;
-    float click_delay = 0;
     float click_timer = 0;
 
     private void Awake()
@@ -44,24 +43,11 @@ public class DoorSwitch : MonoBehaviour
 
             switch_animator.SetTrigger("clicked");
             target.Open();
-
-            if (target.close_after_time)
-            {
-                click_delay = target.close_delay;
-            }
         }
 
-        if (clicked)
+        if (clicked &&target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Close"))
         {
-            if (target.close_after_time && !target.close_after_walked_through)
-            {
-                click_timer += Time.deltaTime;
-
-                if (click_timer >= click_delay)
-                {
-                    Release();
-                }
-            }
+            Release();
         }
     }
 

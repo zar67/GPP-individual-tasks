@@ -22,6 +22,11 @@ public class DoorController : MonoBehaviour
 
     private void Update()
     {
+        if (door_animator.GetCurrentAnimatorStateInfo(0).IsName("Default"))
+        {
+            door_animator.ResetTrigger("close");
+        }
+
         if (close_after_time && !close_after_walked_through && door_animator.GetCurrentAnimatorStateInfo(0).IsName("Open"))
         {
             close_timer += Time.deltaTime;
