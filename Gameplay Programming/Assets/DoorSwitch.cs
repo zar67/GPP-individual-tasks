@@ -38,9 +38,10 @@ public class DoorSwitch : MonoBehaviour
 
     private void Update()
     {
-        if (player.hit && player_in_range && !clicked)
+        if (player.hit && player_in_range && !clicked && target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default"))
         {
             clicked = true;
+
             switch_animator.SetTrigger("clicked");
             target.Open();
 

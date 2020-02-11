@@ -39,6 +39,7 @@ public class RPGCharacterController : MonoBehaviour
     public bool has_double_jumped = false;
 
     // Arming Variables
+    bool armed_pressed = false;
     public GameObject weapon_sheathed;
     public GameObject weapon_armed;
     public Weapons current_weapon = Weapons.NONE;
@@ -214,10 +215,15 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Attack
-        if (Input.GetButtonDown("Attack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        if (Input.GetButtonDown("LeftAttack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
         {
             armed_timer = 0;
-            player_animator.SetInteger("attack", Random.Range(1, 7));
+            player_animator.SetInteger("attack", -1);
+        }
+        else if (Input.GetButtonDown("RightAttack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        {
+            armed_timer = 0;
+            player_animator.SetInteger("attack", 1);
         }
         else
         {
@@ -235,7 +241,7 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Wield
-        if (Input.GetButtonDown("Wield") && current_weapon != Weapons.NONE)
+        if (Input.GetAxis("Wield") > 0 && !armed_pressed && current_weapon != Weapons.NONE)
         {
             if (player_animator.GetBool("armed"))
             {
@@ -246,7 +252,12 @@ public class RPGCharacterController : MonoBehaviour
                 StartCoroutine(Wield());
             }
 
+            armed_pressed = true;
             armed_timer = 0;
+        }
+        if (Input.GetAxis("Wield") == 0)
+        {
+            armed_pressed = false;
         }
 
         if (current_weapon == Weapons.NONE)
