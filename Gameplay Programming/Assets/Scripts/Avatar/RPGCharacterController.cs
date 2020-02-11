@@ -49,6 +49,10 @@ public class RPGCharacterController : MonoBehaviour
     public SpeedBoost speed_boost;
     public DoubleJump double_jump;
 
+    // Attack 
+    [HideInInspector]
+    public bool hit;
+
     // Component References
     Animator player_animator;
     Rigidbody player_rb;
@@ -307,5 +311,15 @@ public class RPGCharacterController : MonoBehaviour
     public void DamagePlayer()
     {
 
+    }
+
+    void Hit()
+    {
+        hit = true;
+    }
+
+    void NotHit()
+    {
+        hit = false;
     }
 }

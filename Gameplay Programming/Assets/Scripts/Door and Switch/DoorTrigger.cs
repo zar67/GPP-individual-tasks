@@ -8,7 +8,7 @@ public class DoorTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        target.Open();
+        target.Close();
     }
 
     private void OnTriggerExit(Collider other)
