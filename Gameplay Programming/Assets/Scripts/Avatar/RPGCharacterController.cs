@@ -39,6 +39,7 @@ public class RPGCharacterController : MonoBehaviour
     public bool has_double_jumped = false;
 
     // Arming Variables
+    bool armed_pressed = false;
     public GameObject weapon_sheathed;
     public GameObject weapon_armed;
     public Weapons current_weapon = Weapons.NONE;
@@ -48,6 +49,10 @@ public class RPGCharacterController : MonoBehaviour
     // Collectables
     public SpeedBoost speed_boost;
     public DoubleJump double_jump;
+
+    // Attack 
+    [HideInInspector]
+    public bool hit;
 
     // Component References
     Animator player_animator;
@@ -139,10 +144,13 @@ public class RPGCharacterController : MonoBehaviour
         if (accept_input)
         {
             // Move
-            Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
+            //Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
+            Vector3 velocity = (player_camera.transform.forward * Input.GetAxis("Vertical")) + (player_camera.transform.right * Input.GetAxis("Horizontal"));
+            velocity = velocity.normalized * move_speed;
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
+                // 
                 transform.rotation = Quaternion.Euler(0f, player_camera.rotation.eulerAngles.y, 0f);
                 Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
@@ -207,10 +215,15 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Attack
-        if (Input.GetButtonDown("Attack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        if (Input.GetButtonDown("LeftAttack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
         {
             armed_timer = 0;
-            player_animator.SetInteger("attack", Random.Range(1, 7));
+            player_animator.SetInteger("attack", -1);
+        }
+        else if (Input.GetButtonDown("RightAttack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        {
+            armed_timer = 0;
+            player_animator.SetInteger("attack", 1);
         }
         else
         {
@@ -228,7 +241,7 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Wield
-        if (Input.GetButtonDown("Wield") && current_weapon != Weapons.NONE)
+        if (Input.GetAxis("Wield") > 0 && !armed_pressed && current_weapon != Weapons.NONE)
         {
             if (player_animator.GetBool("armed"))
             {
@@ -239,7 +252,12 @@ public class RPGCharacterController : MonoBehaviour
                 StartCoroutine(Wield());
             }
 
+            armed_pressed = true;
             armed_timer = 0;
+        }
+        if (Input.GetAxis("Wield") == 0)
+        {
+            armed_pressed = false;
         }
 
         if (current_weapon == Weapons.NONE)
@@ -304,5 +322,15 @@ public class RPGCharacterController : MonoBehaviour
     public void DamagePlayer()
     {
 
+    }
+
+    void Hit()
+    {
+        hit = true;
+    }
+
+    void NotHit()
+    {
+        hit = false;
     }
 }
