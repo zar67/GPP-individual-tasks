@@ -24,6 +24,7 @@ public class DoorSwitch : MonoBehaviour
         if (other.tag.Equals("Hand"))
         {
             player_in_range = true;
+            player.in_range_of_switch = true;
         }
     }
 
@@ -32,23 +33,27 @@ public class DoorSwitch : MonoBehaviour
         if (other.tag.Equals("Hand"))
         {
             player_in_range = false;
+            player.in_range_of_switch = false;
         }
     }
 
     private void Update()
     {
-        if (player.hit && player_in_range && !clicked && target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default"))
+        if (Input.GetButtonDown("LeftAttack") && player_in_range && !clicked && target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default"))
         {
-            clicked = true;
-
-            switch_animator.SetTrigger("clicked");
-            target.Open();
+            GetComponent<DoorCutscene>().StartCutscene();
         }
 
         if (clicked &&target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Close"))
         {
             Release();
         }
+    }
+
+    public void Click()
+    {
+        clicked = true;
+        switch_animator.SetTrigger("clicked");
     }
 
     void Release()
