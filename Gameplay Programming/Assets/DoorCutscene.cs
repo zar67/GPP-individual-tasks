@@ -10,12 +10,16 @@ public class DoorCutscene : MonoBehaviour
         MOVE_TO_SWITCH,
         PRESS_SWITCH,
         MOVE_TO_DOOR,
-        OPEN_DOOR
+        OPEN_DOOR,
+        MOVE_BACK
     }
 
     public Transform player_target;
     public Transform switch_camera_target;
     public Transform door_camera_target;
+
+    Vector3 starting_position;
+    Quaternion starting_rotation;
 
     RPGCharacterController player;
     GameObject player_camera;
@@ -23,6 +27,7 @@ public class DoorCutscene : MonoBehaviour
     CutsceneState state = CutsceneState.NONE;
 
     float move_speed = 2;
+    float rotation_speed = 3.5f;
 
     bool pressing_swtich = false;
     bool opening_door = false;
@@ -44,7 +49,7 @@ public class DoorCutscene : MonoBehaviour
                     player.transform.rotation = player_target.rotation;
 
                     player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, switch_camera_target.position, move_speed * Time.deltaTime);
-                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, switch_camera_target.rotation, move_speed * Time.deltaTime);
+                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, switch_camera_target.rotation, rotation_speed * Time.deltaTime);
 
                     if (Vector3.Distance(player_camera.transform.position, switch_camera_target.position) < 0.25f)
                     {
@@ -63,8 +68,7 @@ public class DoorCutscene : MonoBehaviour
             case CutsceneState.MOVE_TO_DOOR:
             {
                     player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, door_camera_target.position, move_speed * 0.75f * Time.deltaTime);
-                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, door_camera_target.rotation, move_speed * 0.75f * Time.deltaTime);
-                    //player_camera.transform.LookAt(door_switch.target.gameObject.transform);
+                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, door_camera_target.rotation, rotation_speed * Time.deltaTime);
 
                     if (Vector3.Distance(player_camera.transform.position, door_camera_target.position) < 0.25f)
                     {
@@ -80,7 +84,18 @@ public class DoorCutscene : MonoBehaviour
                     }
                     break;
             }
-                // Lerp to camera starting position
+            case CutsceneState.MOVE_BACK:
+            {
+                    player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, starting_position, move_speed * Time.deltaTime);
+                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, starting_rotation, rotation_speed * Time.deltaTime);
+
+                    if (Vector3.Distance(player_camera.transform.position, starting_position) < 0.1f)
+                    {
+                        player_camera.GetComponent<RPGCameraController>().enabled = true; 
+                        state = CutsceneState.NONE;
+                    }
+                    break;
+            }
         }
     }
 
@@ -93,6 +108,9 @@ public class DoorCutscene : MonoBehaviour
         {
             StartCoroutine(player.Sheath());
         }
+
+        starting_position = player_camera.transform.position;
+        starting_rotation = player_camera.transform.rotation;
 
         player_camera.GetComponent<RPGCameraController>().enabled = false;
 
@@ -107,9 +125,8 @@ public class DoorCutscene : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         player.accept_input = true;
-        player_camera.GetComponent<RPGCameraController>().enabled = true;
 
-        state = CutsceneState.NONE;
+        state = CutsceneState.MOVE_BACK;
         opening_door = false;
     }
 
