@@ -21,7 +21,7 @@ public class DoorSwitch : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Hand"))
+        if (other.tag.Equals("Player"))
         {
             player_in_range = true;
             player.in_range_of_switch = true;
@@ -30,7 +30,7 @@ public class DoorSwitch : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag.Equals("Hand"))
+        if (other.tag.Equals("Player"))
         {
             player_in_range = false;
             player.in_range_of_switch = false;

@@ -277,7 +277,7 @@ public class RPGCharacterController : MonoBehaviour
                                    ground);
     }
 
-    IEnumerator Sheath()
+    public IEnumerator Sheath()
     {
         player_animator.SetBool("armed", false);
         player_animator.SetLayerWeight(1, 0);
@@ -307,6 +307,7 @@ public class RPGCharacterController : MonoBehaviour
 
     public void ResetAnimator()
     {
+        player_animator.SetBool("move", false);
         player_animator.SetFloat("vertical_input", 0);
         player_animator.SetFloat("horizontal_input", 0);
         player_animator.SetInteger("jumping", 0);
