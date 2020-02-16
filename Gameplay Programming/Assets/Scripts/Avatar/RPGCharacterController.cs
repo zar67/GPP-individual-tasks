@@ -314,6 +314,8 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetInteger("attack", 0);
         player_animator.SetInteger("kick", 0);
         player_animator.SetBool("strafe", false);
+
+        player_rb.velocity = new Vector3(0, player_rb.velocity.y, 0);
     }
 
     public void Death()

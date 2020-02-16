@@ -45,9 +45,6 @@ public class DoorCutscene : MonoBehaviour
         {
             case CutsceneState.MOVE_TO_SWITCH:
             {
-                    player.transform.position = player_target.position;
-                    player.transform.rotation = player_target.rotation;
-
                     player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, switch_camera_target.position, move_speed * Time.deltaTime);
                     player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, switch_camera_target.rotation, rotation_speed * Time.deltaTime);
 
@@ -104,7 +101,10 @@ public class DoorCutscene : MonoBehaviour
     {
         player.accept_input = false;
         player.ResetAnimator();
-        
+
+        player.transform.position = player_target.position;
+        player.transform.rotation = player_target.rotation;
+
         if (player.GetComponent<Animator>().GetBool("armed"))
         {
             StartCoroutine(player.Sheath());
