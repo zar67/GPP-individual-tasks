@@ -91,6 +91,7 @@ public class DoorCutscene : MonoBehaviour
 
                     if (Vector3.Distance(player_camera.transform.position, starting_position) < 0.1f)
                     {
+                        player.accept_input = true;
                         player_camera.GetComponent<RPGCameraController>().enabled = true; 
                         state = CutsceneState.NONE;
                     }
@@ -123,8 +124,6 @@ public class DoorCutscene : MonoBehaviour
         door_switch.target.Open();
 
         yield return new WaitForSeconds(1);
-
-        player.accept_input = true;
 
         state = CutsceneState.MOVE_BACK;
         opening_door = false;
