@@ -993,12 +993,12 @@ PrefabInstance:
     - target: {fileID: 8753952061736551469, guid: a153d11ced4d086498074630bb0fe870,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.9
+      value: -8.64
       objectReference: {fileID: 0}
     - target: {fileID: 8753952061736551469, guid: a153d11ced4d086498074630bb0fe870,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.07
+      value: -3.296
       objectReference: {fileID: 0}
     - target: {fileID: 4300618282982968510, guid: a153d11ced4d086498074630bb0fe870,
         type: 3}
@@ -5147,7 +5147,7 @@ PrefabInstance:
     - target: {fileID: 509583939985043314, guid: a153d11ced4d086498074630bb0fe870,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.15
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 509583939985043314, guid: a153d11ced4d086498074630bb0fe870,
         type: 3}
@@ -5209,11 +5209,6 @@ PrefabInstance:
       propertyPath: door_camera_target
       value: 
       objectReference: {fileID: 1888736456}
-    - target: {fileID: 509583939985043312, guid: a153d11ced4d086498074630bb0fe870,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 75ca49ed0073dfc43b09040e54956e9a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a153d11ced4d086498074630bb0fe870, type: 3}
 --- !u!1001 &3962885273142137045
