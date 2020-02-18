@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoorCutscene : MonoBehaviour
 {
-    enum CutsceneState
+    public enum CutsceneState
     {
         NONE,
         MOVE_TO_SWITCH,
@@ -24,10 +24,11 @@ public class DoorCutscene : MonoBehaviour
     RPGCharacterController player;
     GameObject player_camera;
     DoorSwitch door_switch;
-    CutsceneState state = CutsceneState.NONE;
+    [HideInInspector]
+    public CutsceneState state = CutsceneState.NONE;
 
-    float move_speed = 2;
-    float rotation_speed = 3.5f;
+    float move_speed = 2.5f;
+    float rotation_speed = 4;
 
     bool pressing_swtich = false;
     bool opening_door = false;
@@ -83,8 +84,8 @@ public class DoorCutscene : MonoBehaviour
             }
             case CutsceneState.MOVE_BACK:
             {
-                    player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, starting_position, move_speed * Time.deltaTime);
-                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, starting_rotation, rotation_speed * Time.deltaTime);
+                    player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, starting_position, move_speed * 1.5f * Time.deltaTime);
+                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, starting_rotation, rotation_speed * 1.5f * Time.deltaTime);
 
                     if (Vector3.Distance(player_camera.transform.position, starting_position) < 0.1f)
                     {
