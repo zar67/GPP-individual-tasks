@@ -34,6 +34,10 @@ public class RPGCameraController : MonoBehaviour
         move_camera = false;
     }
 
+    public void EnableCamera()
+    {
+        move_camera = true;
+    }
     public void ResetCamera()
     {
         offset = (target.forward * 5.5f) - (target.up * 5.3f);

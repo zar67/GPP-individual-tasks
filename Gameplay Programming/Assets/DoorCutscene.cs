@@ -17,6 +17,7 @@ public class DoorCutscene : MonoBehaviour
     public Transform player_target;
     public Transform switch_camera_target;
     public Transform door_camera_target;
+    public bool camera_return_to_start_position;
 
     Vector3 return_position;
 
@@ -89,7 +90,16 @@ public class DoorCutscene : MonoBehaviour
                     if (Vector3.Distance(player_camera.transform.position, return_position) < 0.1f)
                     {
                         player.accept_input = true;
-                        player_camera.GetComponent<RPGCameraController>().ResetCamera();
+
+                        if (camera_return_to_start_position)
+                        {
+                            player_camera.GetComponent<RPGCameraController>().EnableCamera();
+                        }   
+                        else
+                        {
+                            player_camera.GetComponent<RPGCameraController>().ResetCamera();
+                        }
+                        
                         state = CutsceneState.NONE;
                     }
                     break;
@@ -105,7 +115,15 @@ public class DoorCutscene : MonoBehaviour
         player.transform.position = player_target.position;
         player.transform.rotation = player_target.rotation;
 
-        return_position = player.transform.position - (player.transform.forward * 5.5f) + (player.transform.up * 5.3f);
+        if (camera_return_to_start_position)
+        {
+            return_position = player_camera.transform.position;
+        }
+        else
+        {
+            return_position = player.transform.position - (player.transform.forward * 5.5f) + (player.transform.up * 5.3f);
+        }
+        
 
         player_camera.GetComponent<RPGCameraController>().DisableCamera();
 
