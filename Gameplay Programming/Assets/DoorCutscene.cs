@@ -57,7 +57,7 @@ public class DoorCutscene : MonoBehaviour
             }
             case CutsceneState.PRESS_SWITCH:
             {
-                    if (!pressing_swtich)
+                    if (!pressing_swtich && player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(2).IsName("Default"))
                     {
                         StartCoroutine(PressSwitch());
                     }
@@ -106,17 +106,19 @@ public class DoorCutscene : MonoBehaviour
         player.transform.position = player_target.position;
         player.transform.rotation = player_target.rotation;
 
-        if (player.GetComponent<Animator>().GetBool("armed"))
-        {
-            StartCoroutine(player.Sheath());
-        }
-
         starting_position = player_camera.transform.position;
         starting_rotation = player_camera.transform.rotation;
 
         player_camera.GetComponent<RPGCameraController>().enabled = false;
 
-        state = CutsceneState.MOVE_TO_SWITCH;
+        if (player.GetComponent<Animator>().GetBool("armed"))
+        {
+            StartCoroutine(player.Sheath());
+        }
+
+        player_camera.transform.position = switch_camera_target.position;
+        player_camera.transform.rotation = switch_camera_target.rotation;
+        state = CutsceneState.PRESS_SWITCH;
     }
 
     IEnumerator OpenDoor()
