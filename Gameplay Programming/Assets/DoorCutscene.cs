@@ -18,8 +18,7 @@ public class DoorCutscene : MonoBehaviour
     public Transform switch_camera_target;
     public Transform door_camera_target;
 
-    Vector3 starting_position;
-    Quaternion starting_rotation;
+    Vector3 return_position;
 
     RPGCharacterController player;
     GameObject player_camera;
@@ -84,14 +83,13 @@ public class DoorCutscene : MonoBehaviour
             }
             case CutsceneState.MOVE_BACK:
             {
-                    player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, starting_position, move_speed * 1.5f * Time.deltaTime);
-                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, starting_rotation, rotation_speed * 1.5f * Time.deltaTime);
+                    player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, return_position, move_speed * 1.5f * Time.deltaTime);
+                    player_camera.transform.LookAt(player.transform.position + new Vector3(0, 2.4f, 0));
 
-                    if (Vector3.Distance(player_camera.transform.position, starting_position) < 0.1f)
+                    if (Vector3.Distance(player_camera.transform.position, return_position) < 0.1f)
                     {
                         player.accept_input = true;
-                        player_camera.transform.position = player.transform.position - (player.transform.forward * 5);
-                        player_camera.GetComponent<RPGCameraController>().enabled = true; 
+                        player_camera.GetComponent<RPGCameraController>().ResetCamera();
                         state = CutsceneState.NONE;
                     }
                     break;
@@ -107,10 +105,9 @@ public class DoorCutscene : MonoBehaviour
         player.transform.position = player_target.position;
         player.transform.rotation = player_target.rotation;
 
-        starting_position = player_camera.transform.position;
-        starting_rotation = player_camera.transform.rotation;
+        return_position = player.transform.position - (player.transform.forward * 5.5f) + (player.transform.up * 5.3f);
 
-        player_camera.GetComponent<RPGCameraController>().enabled = false;
+        player_camera.GetComponent<RPGCameraController>().DisableCamera();
 
         if (player.GetComponent<Animator>().GetBool("armed"))
         {
