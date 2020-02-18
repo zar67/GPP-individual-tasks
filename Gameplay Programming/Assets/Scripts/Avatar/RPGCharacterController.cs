@@ -218,12 +218,19 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Attack
-        if (Input.GetButtonDown("LeftAttack") && !in_range_of_switch && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        if (Input.GetButtonDown("LeftAttack") && 
+            !in_range_of_switch && 
+            !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump") && 
+            player_animator.GetCurrentAnimatorStateInfo(2).IsName("Default") &&
+            player_animator.GetCurrentAnimatorStateInfo(3).IsName("Default"))
         {
             armed_timer = 0;
             player_animator.SetInteger("attack", -1);
         }
-        else if (Input.GetButtonDown("RightAttack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        else if (Input.GetButtonDown("RightAttack") && 
+            !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump") && 
+            player_animator.GetCurrentAnimatorStateInfo(2).IsName("Default") &&
+            player_animator.GetCurrentAnimatorStateInfo(3).IsName("Default"))
         {
             armed_timer = 0;
             player_animator.SetInteger("attack", 1);
@@ -234,7 +241,10 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Kick
-        if (Input.GetButtonDown("Kick") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        if (Input.GetButtonDown("Kick") && 
+            !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump") &&
+            player_animator.GetCurrentAnimatorStateInfo(4).IsName("Default") &&
+            player_animator.GetCurrentAnimatorStateInfo(5).IsName("Default"))
         {
             player_animator.SetInteger("kick", Random.Range(1, 3));
         }
