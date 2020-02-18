@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  interact_UI: {fileID: 0}
 --- !u!114 &1606498563050731591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,6 +159,7 @@ MonoBehaviour:
   player_target: {fileID: 8753952061736551469}
   switch_camera_target: {fileID: 4300618282982968510}
   door_camera_target: {fileID: 0}
+  state: 0
 --- !u!1 &3324683929303479908
 GameObject:
   m_ObjectHideFlags: 0

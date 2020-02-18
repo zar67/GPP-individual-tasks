@@ -17,10 +17,13 @@ public class DoorSwitch : MonoBehaviour
     bool clicked = false;
     float click_timer = 0;
 
+    Vector3 start_position;
+
     private void Awake()
     {
         switch_animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<RPGCharacterController>();
+        start_position = transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -74,9 +77,14 @@ public class DoorSwitch : MonoBehaviour
             show_ui = false;
         }
 
-        if (clicked &&target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Close"))
+        if (clicked && target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Close"))
         {
             Release();
+        }
+
+        if (switch_animator.GetCurrentAnimatorStateInfo(0).IsName("Default") && transform.position != start_position)
+        {
+            transform.position = start_position;
         }
     }
 
