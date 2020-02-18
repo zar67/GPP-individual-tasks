@@ -71,7 +71,11 @@ public class DoorSwitch : MonoBehaviour
             interact_UI.alpha = new_alpha;
         }
 
-        if (Input.GetButtonDown("LeftAttack") && player_in_range && !clicked && target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default") && GetComponent<DoorCutscene>().state == DoorCutscene.CutsceneState.NONE)
+        if (Input.GetButtonDown("LeftAttack") && 
+            player_in_range && 
+            !clicked && 
+            target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default") && 
+            GetComponent<DoorCutscene>().state == DoorCutscene.CutsceneState.NONE)
         {
             GetComponent<DoorCutscene>().StartCutscene();
             show_ui = false;

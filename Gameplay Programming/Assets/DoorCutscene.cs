@@ -20,6 +20,7 @@ public class DoorCutscene : MonoBehaviour
     public bool camera_return_to_start_position;
 
     Vector3 return_position;
+    Quaternion return_rotation;
 
     RPGCharacterController player;
     GameObject player_camera;
@@ -27,8 +28,8 @@ public class DoorCutscene : MonoBehaviour
     [HideInInspector]
     public CutsceneState state = CutsceneState.NONE;
 
-    float move_speed = 2.5f;
-    float rotation_speed = 4;
+    float move_speed = 2;
+    float rotation_speed = 3.5f;
 
     bool pressing_swtich = false;
     bool opening_door = false;
@@ -85,7 +86,8 @@ public class DoorCutscene : MonoBehaviour
             case CutsceneState.MOVE_BACK:
             {
                     player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, return_position, move_speed * 1.5f * Time.deltaTime);
-                    player_camera.transform.LookAt(player.transform.position + new Vector3(0, 2.4f, 0));
+                    player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, return_rotation, rotation_speed * Time.deltaTime);
+                    //player_camera.transform.LookAt(player.transform.position + new Vector3(0, 2.4f, 0));
 
                     if (Vector3.Distance(player_camera.transform.position, return_position) < 0.1f)
                     {
@@ -118,13 +120,14 @@ public class DoorCutscene : MonoBehaviour
         if (camera_return_to_start_position)
         {
             return_position = player_camera.transform.position;
+            return_rotation = Quaternion.LookRotation(player.transform.position - player_camera.transform.position + new Vector3(0, 2.4f, 0), Vector3.up);
         }
         else
         {
             return_position = player.transform.position - (player.transform.forward * 5.5f) + (player.transform.up * 5.3f);
+            return_rotation = Quaternion.LookRotation(player.transform.position - (player.transform.position - (player.transform.forward * 5.5f) + (player.transform.up * 5.3f) - new Vector3(0, 2.4f, 0)), Vector3.up);
         }
         
-
         player_camera.GetComponent<RPGCameraController>().DisableCamera();
 
         if (player.GetComponent<Animator>().GetBool("armed"))
