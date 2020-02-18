@@ -54,6 +54,9 @@ public class RPGCharacterController : MonoBehaviour
     [HideInInspector]
     public bool hit;
 
+    // Switches
+    public bool in_range_of_switch = false;
+
     // Component References
     Animator player_animator;
     Rigidbody player_rb;
@@ -215,7 +218,7 @@ public class RPGCharacterController : MonoBehaviour
         }
 
         // Attack
-        if (Input.GetButtonDown("LeftAttack") && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
+        if (Input.GetButtonDown("LeftAttack") && !in_range_of_switch && !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump"))
         {
             armed_timer = 0;
             player_animator.SetInteger("attack", -1);
@@ -274,7 +277,7 @@ public class RPGCharacterController : MonoBehaviour
                                    ground);
     }
 
-    IEnumerator Sheath()
+    public IEnumerator Sheath()
     {
         player_animator.SetBool("armed", false);
         player_animator.SetLayerWeight(1, 0);
@@ -304,12 +307,15 @@ public class RPGCharacterController : MonoBehaviour
 
     public void ResetAnimator()
     {
-        player_animator.SetInteger("jumping", 0);
+        player_animator.SetBool("move", false);
         player_animator.SetFloat("vertical_input", 0);
-        player_animator.SetFloat("turning_input", 0);
+        player_animator.SetFloat("horizontal_input", 0);
+        player_animator.SetInteger("jumping", 0);
         player_animator.SetInteger("attack", 0);
         player_animator.SetInteger("kick", 0);
         player_animator.SetBool("strafe", false);
+
+        player_rb.velocity = new Vector3(0, player_rb.velocity.y, 0);
     }
 
     public void Death()
