@@ -8,14 +8,12 @@ public class DoorSwitch : MonoBehaviour
     public DoorController target;
 
     public CanvasGroup interact_UI;
-    bool show_ui = false;
 
     Animator switch_animator;
     RPGCharacterController player;
     bool player_in_range = false;
 
     bool clicked = false;
-    float click_timer = 0;
 
     Vector3 start_position;
 
@@ -32,7 +30,6 @@ public class DoorSwitch : MonoBehaviour
         {
             player_in_range = true;
             player.in_range_of_switch = true;
-            show_ui = true;
         }
     }
 
@@ -42,13 +39,15 @@ public class DoorSwitch : MonoBehaviour
         {
             player_in_range = false;
             player.in_range_of_switch = false;
-            show_ui = false;
         }
     }
 
     private void Update()
     {
-        if (show_ui && interact_UI.alpha != 2)
+        if (!clicked &&
+            player_in_range &&
+            target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default") && 
+            interact_UI.alpha != 2)
         {
             float new_alpha = Mathf.Lerp(interact_UI.alpha, 2, 0.1f);
 
@@ -59,7 +58,8 @@ public class DoorSwitch : MonoBehaviour
 
             interact_UI.alpha = new_alpha;
         }
-        else if (!show_ui && interact_UI.alpha != 0)
+        else if ((clicked || !player_in_range ||
+            !target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Default")) && interact_UI.alpha != 0)
         {
             float new_alpha = Mathf.Lerp(interact_UI.alpha, 0, 0.1f);
 
@@ -78,7 +78,6 @@ public class DoorSwitch : MonoBehaviour
             GetComponent<DoorCutscene>().state == DoorCutscene.CutsceneState.NONE)
         {
             GetComponent<DoorCutscene>().StartCutscene();
-            show_ui = false;
         }
 
         if (clicked && target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Close"))
@@ -102,6 +101,5 @@ public class DoorSwitch : MonoBehaviour
     {
         switch_animator.SetTrigger("released");
         clicked = false;
-        click_timer = 0;
     }
 }
