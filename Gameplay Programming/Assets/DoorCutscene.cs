@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorCutscene : MonoBehaviour
@@ -58,7 +57,7 @@ public class DoorCutscene : MonoBehaviour
             }
             case CutsceneState.PRESS_SWITCH:
             {
-                    if (!pressing_swtich && player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(2).IsName("Default"))
+                    if (!pressing_swtich && !player.GetComponent<Animator>().GetBool("armed"))
                     {
                         StartCoroutine(PressSwitch());
                     }

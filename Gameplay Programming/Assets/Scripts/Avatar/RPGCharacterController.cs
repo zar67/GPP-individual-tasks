@@ -289,7 +289,6 @@ public class RPGCharacterController : MonoBehaviour
 
     public IEnumerator Sheath()
     {
-        player_animator.SetBool("armed", false);
         player_animator.SetLayerWeight(1, 0);
         player_animator.SetLayerWeight(3, 0);
         player_animator.SetLayerWeight(5, 0);
@@ -299,11 +298,11 @@ public class RPGCharacterController : MonoBehaviour
 
         weapon_armed.SetActive(false);
         weapon_sheathed.SetActive(true);
+        player_animator.SetBool("armed", false);
     }
 
     IEnumerator Wield()
     { 
-        player_animator.SetBool("armed", true);
         player_animator.SetLayerWeight(1, 1);
         player_animator.SetLayerWeight(3, 1);
         player_animator.SetLayerWeight(5, 1);
@@ -313,6 +312,7 @@ public class RPGCharacterController : MonoBehaviour
 
         weapon_armed.SetActive(true);
         weapon_sheathed.SetActive(false);
+        player_animator.SetBool("armed", true);
     }
 
     public void ResetAnimator()

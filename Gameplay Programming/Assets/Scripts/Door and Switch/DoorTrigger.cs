@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class DoorTrigger : MonoBehaviour
 {
-    public DoorController target;
-
     private void OnTriggerEnter(Collider other)
     {
-        if (target.close_after_walked_through)
+        if (other.tag.Equals("Player") && GetComponentInParent<DoorController>().close_after_walked_through)
         {
-            target.Close();
+            GetComponentInParent<DoorController>().Close();
         }
     }
 }
