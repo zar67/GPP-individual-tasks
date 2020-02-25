@@ -6,22 +6,27 @@ public class RPGCameraController : MonoBehaviour
 {
     public Transform target;
     public Transform pivot;
+    public LayerMask camera_blocking_objects;
     public float rotation_speed = 3;
 
     bool move_camera = true;
+    bool lerping_to_axis = false;
+
+    Vector3[] directions = new Vector3[4] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
+    Vector2 base_offset = new Vector2(5.5f, 2.9f);
     Vector3 offset;
-    Vector3[] directions;
     Vector3 nearest_dir;
+
     float camera_timer = 0;
-    bool lerping = false;
+    float distance;
 
     void Awake()
     {
-        directions = new Vector3[4] {Vector3.forward, Vector3.right, Vector3.back, Vector3.left};
-
         pivot.position = target.position;
         pivot.parent = target;
         ResetCamera();
+
+        distance = Vector3.Distance(target.position, transform.position);
     }
 
     void LateUpdate()
@@ -30,14 +35,13 @@ public class RPGCameraController : MonoBehaviour
         {
             if (Input.GetAxis("Camera") == 0)
             {
-                if (lerping)
+                if (lerping_to_axis)
                 {
-                    //offset = (-directions[nearest_dir] * 5.5f) - (target.up * 5.3f);
                     offset = Vector3.Lerp(offset, nearest_dir, rotation_speed * Time.deltaTime);
 
                     if (Vector3.Distance(offset, nearest_dir) < 0.5f)
                     {
-                        lerping = false;
+                        lerping_to_axis = false;
                     }
                 }
                 else
@@ -48,7 +52,7 @@ public class RPGCameraController : MonoBehaviour
                 if (camera_timer > 2)
                 {
                     camera_timer = 0;
-                    lerping = true;
+                    lerping_to_axis = true;
                     GetNearestDirection();
                 }
             }
@@ -56,10 +60,20 @@ public class RPGCameraController : MonoBehaviour
             {
                 Quaternion turn_angle = Quaternion.AngleAxis(Input.GetAxis("Camera") * rotation_speed, Vector3.up);
                 offset = turn_angle * offset;
+                lerping_to_axis = false;
             }
 
             transform.position = target.position - offset;
-            transform.LookAt(target.position + new Vector3(0, 2.4f, 0));
+
+            // Raycasting
+            Vector3 dir = transform.position - target.position;
+            RaycastHit hit;
+            if (Physics.Raycast(target.position, dir, out hit, distance, camera_blocking_objects))
+            {
+                transform.position = target.position + (dir.normalized * hit.distance);
+            }
+
+            transform.LookAt(target.position);
         }
     }
 
@@ -74,9 +88,9 @@ public class RPGCameraController : MonoBehaviour
     }
     public void ResetCamera()
     {
-        offset = (target.forward * 5.5f) - (target.up * 5.3f);
+        offset = (target.forward * base_offset.x) - (target.up * base_offset.y);
         transform.position = target.position - offset;
-        transform.LookAt(target.position + new Vector3(0, 2.4f, 0));
+        transform.LookAt(target.position);
         move_camera = true;
     }
 
@@ -98,7 +112,7 @@ public class RPGCameraController : MonoBehaviour
         {
             if (angles[i] == nearest)
             {
-                nearest_dir = (-directions[i] * 5.5f) - (target.up * 5.3f);
+                nearest_dir = (-directions[i] * base_offset.x) - (target.up * base_offset.y);
                 break;
             }
         }
