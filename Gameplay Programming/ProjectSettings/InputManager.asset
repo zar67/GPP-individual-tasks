@@ -70,7 +70,7 @@ InputManager:
     axis: 1
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Camera
+    m_Name: CameraHorizontal
     descriptiveName: Rotate Camera Right
     descriptiveNegativeName: Rotate Camera Left
     negativeButton: right
@@ -81,12 +81,12 @@ InputManager:
     dead: 0.001
     sensitivity: 3
     snap: 0
-    invert: 0
+    invert: 1
     type: 0
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Camera
+    m_Name: CameraHorizontal
     descriptiveName: Rotate Camera Right
     descriptiveNegativeName: Rotate Camera Left
     negativeButton: 
@@ -100,6 +100,38 @@ InputManager:
     invert: 0
     type: 2
     axis: 3
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: CameraVertical
+    descriptiveName: Zoom In
+    descriptiveNegativeName: Zoom Out
+    negativeButton: up
+    positiveButton: down
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 3
+    dead: 0.001
+    sensitivity: 3
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 3
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: CameraVertical
+    descriptiveName: Zoom In
+    descriptiveNegativeName: Zoom Out
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 3
+    dead: 0.001
+    sensitivity: 3
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 4
     joyNum: 0
   - serializedVersion: 3
     m_Name: LeftAttack

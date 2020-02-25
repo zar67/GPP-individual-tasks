@@ -8,6 +8,8 @@ public class RPGCameraController : MonoBehaviour
     public Transform pivot;
     public LayerMask camera_blocking_objects;
     public float rotation_speed = 3;
+    public bool lock_to_axis;
+    public float lock_delay = 1.5f;
 
     bool move_camera = true;
     bool lerping_to_axis = false;
@@ -19,6 +21,7 @@ public class RPGCameraController : MonoBehaviour
 
     float camera_timer = 0;
     float distance;
+    float zoom_value = 1;
 
     void Awake()
     {
@@ -33,13 +36,24 @@ public class RPGCameraController : MonoBehaviour
     {
         if (move_camera)
         {
-            if (Input.GetAxis("Camera") == 0)
+            if (Input.GetAxis("CameraVertical") > 0.75f)
+            {
+                zoom_value = Mathf.Clamp(zoom_value * 0.95f, 0.35f, 1.65f);
+            }
+            else if(Input.GetAxis("CameraVertical") < -0.75f)
+            {
+                zoom_value = Mathf.Clamp(zoom_value * 1.05f, 0.35f, 1.65f);
+            }
+
+            if (Input.GetAxis("CameraHorizontal") == 0 && lock_to_axis)
             {
                 if (lerping_to_axis)
                 {
                     offset = Vector3.Lerp(offset, nearest_dir, rotation_speed * Time.deltaTime);
+                    Debug.Log(zoom_value);
+                    zoom_value = Mathf.Lerp(zoom_value, 1, rotation_speed * Time.deltaTime);
 
-                    if (Vector3.Distance(offset, nearest_dir) < 0.5f)
+                    if (Vector3.Distance(offset * zoom_value, nearest_dir) < 0.5f)
                     {
                         lerping_to_axis = false;
                     }
@@ -49,7 +63,7 @@ public class RPGCameraController : MonoBehaviour
                     camera_timer += Time.deltaTime;
                 }
 
-                if (camera_timer > 2)
+                if (camera_timer > lock_delay)
                 {
                     camera_timer = 0;
                     lerping_to_axis = true;
@@ -58,19 +72,19 @@ public class RPGCameraController : MonoBehaviour
             }
             else
             {
-                Quaternion turn_angle = Quaternion.AngleAxis(Input.GetAxis("Camera") * rotation_speed, Vector3.up);
+                Quaternion turn_angle = Quaternion.AngleAxis(Input.GetAxis("CameraHorizontal") * rotation_speed, Vector3.up);
                 offset = turn_angle * offset;
                 lerping_to_axis = false;
             }
 
-            transform.position = target.position - offset;
+            transform.position = target.position - (offset * zoom_value);
 
             // Raycasting
             Vector3 dir = transform.position - target.position;
             RaycastHit hit;
             if (Physics.Raycast(target.position, dir, out hit, distance, camera_blocking_objects))
             {
-                transform.position = target.position + (dir.normalized * hit.distance);
+                transform.position = target.position + (dir.normalized * hit.distance * 0.95f);
             }
 
             transform.LookAt(target.position);
