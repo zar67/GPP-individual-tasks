@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 509583939985043309}
   - component: {fileID: 509583939985043310}
   - component: {fileID: 1606498563050731591}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 509583939985043315}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -27.89, y: 1.51, z: -11.38}
-  m_LocalScale: {x: 1, y: 0.1, z: 1}
+  m_LocalScale: {x: 1, y: 0.10000006, z: 1}
   m_Children:
   - {fileID: 8753952061736551469}
   - {fileID: 4300618282982968510}
@@ -159,6 +159,7 @@ MonoBehaviour:
   player_target: {fileID: 8753952061736551469}
   switch_camera_target: {fileID: 4300618282982968510}
   door_camera_target: {fileID: 0}
+  camera_return_to_start_position: 1
   state: 0
 --- !u!1 &3324683929303479908
 GameObject:
@@ -169,7 +170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8753952061736551469}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CutscenePlayerTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +200,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4300618282982968510}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CutsceneCameraSwitchTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
