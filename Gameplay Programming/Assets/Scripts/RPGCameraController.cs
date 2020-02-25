@@ -11,8 +11,9 @@ public class RPGCameraController : MonoBehaviour
     bool move_camera = true;
     Vector3 offset;
     Vector3[] directions;
-    int nearest_dir = -1;
+    Vector3 nearest_dir;
     float camera_timer = 0;
+    bool lerping = false;
 
     void Awake()
     {
@@ -29,15 +30,26 @@ public class RPGCameraController : MonoBehaviour
         {
             if (Input.GetAxis("Camera") == 0)
             {
-                // 5.5 back 5.3 up
-                camera_timer += Time.deltaTime;
+                if (lerping)
+                {
+                    //offset = (-directions[nearest_dir] * 5.5f) - (target.up * 5.3f);
+                    offset = Vector3.Lerp(offset, nearest_dir, rotation_speed * Time.deltaTime);
+
+                    if (Vector3.Distance(offset, nearest_dir) < 0.5f)
+                    {
+                        lerping = false;
+                    }
+                }
+                else
+                {
+                    camera_timer += Time.deltaTime;
+                }
 
                 if (camera_timer > 2)
                 {
                     camera_timer = 0;
-
+                    lerping = true;
                     GetNearestDirection();
-                    offset = (-directions[nearest_dir] * 5.5f) - (target.up * 5.3f);
                 }
             }
             else
@@ -81,12 +93,12 @@ public class RPGCameraController : MonoBehaviour
 
         float nearest = Mathf.Min(Mathf.Min(Mathf.Min(angles[0], angles[1]), angles[2]), angles[3]);
 
-        nearest_dir = -1;
+        nearest_dir = Vector3.zero;
         for (int i = 0; i < 4; i++)
         {
             if (angles[i] == nearest)
             {
-                nearest_dir = i;
+                nearest_dir = (-directions[i] * 5.5f) - (target.up * 5.3f);
                 break;
             }
         }
