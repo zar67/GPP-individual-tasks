@@ -53,7 +53,6 @@ public class PathEditor : Editor
 
     void Draw()
     {
-
         for (int i = 0; i < path.NumSegments; i++)
         {
             Vector3[] points = path.GetPointsInSegment(i);

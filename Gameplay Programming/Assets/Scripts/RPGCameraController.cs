@@ -50,7 +50,6 @@ public class RPGCameraController : MonoBehaviour
                 if (lerping_to_axis)
                 {
                     offset = Vector3.Lerp(offset, nearest_dir, rotation_speed * Time.deltaTime);
-                    Debug.Log(zoom_value);
                     zoom_value = Mathf.Lerp(zoom_value, 1, rotation_speed * Time.deltaTime);
 
                     if (Vector3.Distance(offset * zoom_value, nearest_dir) < 0.5f)
