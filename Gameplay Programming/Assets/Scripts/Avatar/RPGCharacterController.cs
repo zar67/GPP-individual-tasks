@@ -147,13 +147,11 @@ public class RPGCharacterController : MonoBehaviour
         if (accept_input)
         {
             // Move
-            //Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
             Vector3 velocity = (player_camera.transform.forward * Input.GetAxis("Vertical")) + (player_camera.transform.right * Input.GetAxis("Horizontal"));
             velocity = velocity.normalized * move_speed;
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
-                // 
                 transform.rotation = Quaternion.Euler(0f, player_camera.rotation.eulerAngles.y, 0f);
                 Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
@@ -170,21 +168,6 @@ public class RPGCharacterController : MonoBehaviour
 
             player_rb.velocity = velocity;
 
-            if (set_jump)
-            {
-                set_jump = false;
-                player_animator.SetInteger("jumping", 1);
-                player_rb.velocity = Vector3.up * jump_force;
-            }
-
-            if (set_double_jump)
-            {
-                set_double_jump = false;
-                has_double_jumped = true;
-                player_animator.Play("Double Jump", 0);
-                player_rb.velocity = Vector3.up * double_jump_force;
-            }
-
             if (player_rb.velocity.y <= 0)
             {
                 // Land
@@ -200,9 +183,24 @@ public class RPGCharacterController : MonoBehaviour
                 }
             }
         }
+
+        if (set_jump)
+        {
+            set_jump = false;
+            player_animator.SetInteger("jumping", 1);
+            player_rb.velocity = Vector3.up * jump_force;
+        }
+
+        if (set_double_jump)
+        {
+            set_double_jump = false;
+            has_double_jumped = true;
+            player_animator.Play("Double Jump", 0);
+            player_rb.velocity = Vector3.up * double_jump_force;
+        }
     }
 
-    void UpdateAnimator()
+    public void UpdateAnimator()
     {
         // Move
         player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
