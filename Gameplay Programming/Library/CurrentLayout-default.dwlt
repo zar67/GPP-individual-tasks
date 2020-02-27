@@ -398,20 +398,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Scripts/Door and Switch
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Scripts/Door and Switch
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Gameplay-Programming-Tasks\Gameplay Programming
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 17}
-    m_SelectedIDs: 942e0000
-    m_LastClickedID: 11924
-    m_ExpandedIDs: 00000000942e0000e42e0000322f0000aa300000e831000056360000863d0000883d00008a3d00008c3d00008e3d0000903d0000923d0000943d000000ca9a3b
+    m_SelectedIDs: 2e340000
+    m_LastClickedID: 13358
+    m_ExpandedIDs: 00000000a42e0000f42e0000422f0000ba300000f8310000663600008e3d0000903d0000923d0000943d0000963d0000983d00009a3d00009c3d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -439,7 +439,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000942e0000e42e0000322f0000aa300000e831000056360000863d0000883d00008a3d00008c3d00008e3d0000903d0000923d0000943d0000
+    m_ExpandedIDs: 00000000a42e0000f42e0000422f0000ba300000f8310000663600008e3d0000903d0000923d0000943d0000963d0000983d00009a3d00009c3d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -560,9 +560,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: 88270000
       m_LastClickedID: 0
-      m_ExpandedIDs: 76fbffff98390000
+      m_ExpandedIDs: 62fbffffa2390000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

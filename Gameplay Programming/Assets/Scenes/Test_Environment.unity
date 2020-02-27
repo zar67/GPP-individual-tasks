@@ -3365,6 +3365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1567853188}
+  position_start: 1
 --- !u!1001 &845316844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4372,6 +4373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1567853188}
+  position_start: 0
 --- !u!1 &1093150137
 GameObject:
   m_ObjectHideFlags: 0
@@ -6089,11 +6091,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player_spline: {fileID: 625072038}
-  camera_spline: {fileID: 1981214575}
   bezier_position_divisions: 10
   left_dir_positive: 1
   player_spline_positions: []
-  camera_spline_positions: []
   triggered: 0
 --- !u!1001 &1624522515
 PrefabInstance:
@@ -7316,6 +7316,7 @@ MonoBehaviour:
   rotation_speed: 3
   lock_to_axis: 1
   lock_delay: 1.5
+  base_offset: {x: 5.5, y: 2.9}
 --- !u!81 &1998400891
 AudioListener:
   m_ObjectHideFlags: 0

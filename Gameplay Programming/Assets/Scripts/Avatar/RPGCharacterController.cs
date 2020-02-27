@@ -203,7 +203,11 @@ public class RPGCharacterController : MonoBehaviour
     public void UpdateAnimator()
     {
         // Move
-        player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
+        
+        if (accept_input)
+        {
+            player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
+        }
         player_animator.SetFloat("horizontal_input", -Input.GetAxis("Horizontal"));
         
         if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)

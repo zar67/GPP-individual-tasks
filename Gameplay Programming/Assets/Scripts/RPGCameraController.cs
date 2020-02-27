@@ -15,7 +15,8 @@ public class RPGCameraController : MonoBehaviour
     bool lerping_to_axis = false;
 
     Vector3[] directions = new Vector3[4] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
-    Vector2 base_offset = new Vector2(5.5f, 2.9f);
+    [HideInInspector]
+    public Vector2 base_offset = new Vector2(5.5f, 2.9f);
     Vector3 offset;
     Vector3 nearest_dir;
 
