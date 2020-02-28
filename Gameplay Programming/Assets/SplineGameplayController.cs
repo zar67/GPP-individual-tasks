@@ -8,8 +8,10 @@ public class SplineGameplayController : MonoBehaviour
    // References
     public PathCreator player_spline;
 
-    RPGCharacterController player_controller;
-    RPGCameraController camera_controller;
+    [HideInInspector]
+    public RPGCharacterController player_controller;
+    [HideInInspector]
+    public RPGCameraController camera_controller;
 
     public int bezier_position_divisions = 10;
     public bool left_dir_positive = true;
@@ -17,7 +19,8 @@ public class SplineGameplayController : MonoBehaviour
     [HideInInspector]
     public List<Vector3> player_spline_positions;
 
-    int current_player_index = 0;
+    [HideInInspector]
+    public int current_player_index = 0;
     [HideInInspector]
     public bool triggered = false;
 
@@ -44,8 +47,9 @@ public class SplineGameplayController : MonoBehaviour
             if (Input.GetAxis("Horizontal") != 0)
             {
                 bool dir_positive = (Input.GetAxis("Horizontal") < 0 && left_dir_positive) || (Input.GetAxis("Horizontal") > 0 && !left_dir_positive);
+                Debug.Log(dir_positive);
 
-                if (dir_positive)
+                if (dir_positive && current_player_index < player_spline_positions.Count)
                 {
                     player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
                     Vector3 target_dir = player_spline_positions[current_player_index + 1];
@@ -57,7 +61,7 @@ public class SplineGameplayController : MonoBehaviour
                         current_player_index += 1;
                     }
                 }
-                else
+                else if (!dir_positive && current_player_index > 0)
                 {
                     player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
                     Vector3 target_dir = player_spline_positions[current_player_index - 1];
@@ -81,31 +85,13 @@ public class SplineGameplayController : MonoBehaviour
         }
     }
 
-    public void StartSplineGameplay(bool start_at_start)
+    public void StartSplineGameplay()
     {
-        camera_controller.DisableCamera();
-        
-        player_controller.accept_input = false;
-        player_controller.jump_force /= 2;
-        player_controller.ResetAnimator();
-
-        if (start_at_start)
-        {
-            current_player_index = 0;
-            player_controller.transform.position = player_spline_positions[0];
-        }
-        else
-        {
-            current_player_index = player_spline_positions.Count - 1;
-            player_controller.transform.position = player_spline_positions[player_spline_positions.Count - 1];
-        }
-
         triggered = true;
     }
 
     public void EndSplineGameplay()
     {
-        triggered = false;
         player_controller.accept_input = true;
         player_controller.jump_force *= 2;
         camera_controller.EnableCamera();
