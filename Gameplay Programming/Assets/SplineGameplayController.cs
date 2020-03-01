@@ -23,6 +23,7 @@ public class SplineGameplayController : MonoBehaviour
     public int current_player_index = 0;
     [HideInInspector]
     public bool triggered = false;
+    bool end_lerp = false;
 
     private void Awake()
     {
@@ -46,10 +47,7 @@ public class SplineGameplayController : MonoBehaviour
 
             if (Input.GetAxis("Horizontal") != 0)
             {
-                bool dir_positive = (Input.GetAxis("Horizontal") < 0 && left_dir_positive) || (Input.GetAxis("Horizontal") > 0 && !left_dir_positive);
-                Debug.Log(dir_positive);
-
-                if (dir_positive && current_player_index < player_spline_positions.Count)
+                if (Input.GetAxis("Horizontal") < 0 && current_player_index < player_spline_positions.Count)
                 {
                     player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
                     Vector3 target_dir = player_spline_positions[current_player_index + 1];
@@ -59,9 +57,18 @@ public class SplineGameplayController : MonoBehaviour
                     if (Vector3.Distance(player_controller.transform.position, player_spline_positions[current_player_index + 1]) < 0.2f)
                     {
                         current_player_index += 1;
+
+                        if (current_player_index + 1 == player_spline_positions.Count)
+                        {
+                            triggered = false;
+                            player_controller.ResetAnimator();
+                            end_lerp = true;
+                        }
                     }
+
+                    camera_controller.transform.position = camera_controller.target.position + (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
                 }
-                else if (!dir_positive && current_player_index > 0)
+                else if (Input.GetAxis("Horizontal") > 0 && current_player_index > 0)
                 {
                     player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
                     Vector3 target_dir = player_spline_positions[current_player_index - 1];
@@ -71,16 +78,37 @@ public class SplineGameplayController : MonoBehaviour
                     if (Vector3.Distance(player_controller.transform.position, player_spline_positions[current_player_index - 1]) < 0.2f)
                     {
                         current_player_index -= 1;
+
+                        if (current_player_index - 1 == 0)
+                        {
+                            triggered = false;
+                            player_controller.ResetAnimator();
+                            end_lerp = true;
+                        }
                     }
+
+                    camera_controller.transform.position = camera_controller.target.position - (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
                 }
 
-                camera_controller.transform.position = camera_controller.target.position + (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
                 camera_controller.transform.LookAt(camera_controller.target);
             }
 
             if (Input.GetButtonDown("Jump"))
             {
                 player_controller.set_jump = true;
+            }
+        }
+
+        if (end_lerp)
+        {
+            Vector3 offset = camera_controller.target.position + (camera_controller.target.forward * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
+            camera_controller.transform.position = Vector3.Lerp(camera_controller.transform.position, offset, camera_controller.rotation_speed * Time.deltaTime);
+            camera_controller.transform.LookAt(camera_controller.target.position);
+
+            if (Vector3.Distance(camera_controller.transform.position, offset) < 0.25f)
+            {
+                end_lerp = false;
+                EndSplineGameplay();
             }
         }
     }
