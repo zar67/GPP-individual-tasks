@@ -24,6 +24,7 @@ public class SplineGameplayController : MonoBehaviour
     [HideInInspector]
     public bool triggered = false;
     bool end_lerp = false;
+    Vector3 camera_offset;
 
     private void Awake()
     {
@@ -66,7 +67,7 @@ public class SplineGameplayController : MonoBehaviour
                         }
                     }
 
-                    camera_controller.transform.position = camera_controller.target.position + (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
+                    camera_offset = camera_controller.target.position + (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
                 }
                 else if (Input.GetAxis("Horizontal") > 0 && current_player_index > 0)
                 {
@@ -87,9 +88,10 @@ public class SplineGameplayController : MonoBehaviour
                         }
                     }
 
-                    camera_controller.transform.position = camera_controller.target.position - (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
+                    camera_offset = camera_controller.target.position - (-camera_controller.target.right * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
                 }
 
+                camera_controller.transform.position = Vector3.Lerp(camera_controller.transform.position, camera_offset, camera_controller.rotation_speed * Time.deltaTime);
                 camera_controller.transform.LookAt(camera_controller.target);
             }
 
