@@ -58,7 +58,10 @@ public class SplineGameplayController : MonoBehaviour
                     }
                     else
                     {
-                        player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
+                        //player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
+                        Vector3 new_pos = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
+                        player_controller.transform.position = new Vector3(new_pos.x, player_controller.transform.position.y, new_pos.z);
+
                         Vector3 target_dir = player_spline_positions[current_player_index + 1];
                         target_dir.y = player_controller.transform.position.y;
                         player_controller.transform.LookAt(target_dir);
@@ -88,7 +91,10 @@ public class SplineGameplayController : MonoBehaviour
                     }
                     else
                     {
-                        player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
+                        //player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
+                        Vector3 new_pos = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
+                        player_controller.transform.position = new Vector3(new_pos.x, player_controller.transform.position.y, new_pos.z);
+
                         Vector3 target_dir = player_spline_positions[current_player_index - 1];
                         target_dir.y = player_controller.transform.position.y;
                         player_controller.transform.LookAt(target_dir);
@@ -113,7 +119,7 @@ public class SplineGameplayController : MonoBehaviour
                 camera_controller.transform.LookAt(camera_controller.target);
             }
 
-            if (Input.GetButtonDown("Jump") && player_controller.grounded)
+            if (Input.GetButtonDown("Jump") && player_controller.GetComponent<Animator>().GetInteger("jumping") == 0)
             {
                 player_controller.set_jump = true;
             }
@@ -142,6 +148,7 @@ public class SplineGameplayController : MonoBehaviour
     public void EndSplineGameplay()
     {
         player_controller.move_speed = RPGCharacterController.base_move_speed;
+        player_controller.jump_force *= 2;
 
         player_controller.accept_input = true;
         camera_controller.transform.position = camera_controller.target.position + (-camera_controller.target.forward * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);

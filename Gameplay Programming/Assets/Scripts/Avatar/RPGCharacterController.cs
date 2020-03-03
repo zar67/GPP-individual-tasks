@@ -179,8 +179,13 @@ public class RPGCharacterController : MonoBehaviour
                 has_double_jumped = false;
             }
             // Fall
-            else
+            else if (!player_animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
             {
+                if (player_animator.GetInteger("jumping") == 0)
+                {
+                    player_animator.Play("Fall", 0);
+                }
+
                 player_animator.SetInteger("jumping", 2);
             }
         }
