@@ -95,7 +95,7 @@ public class SplineGameplayController : MonoBehaviour
                 camera_controller.transform.LookAt(camera_controller.target);
             }
 
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && player_controller.grounded)
             {
                 player_controller.set_jump = true;
             }
@@ -118,12 +118,15 @@ public class SplineGameplayController : MonoBehaviour
     public void StartSplineGameplay()
     {
         triggered = true;
+        player_controller.jump_force *= 2;
+        player_controller.move_speed *= 2;
     }
 
     public void EndSplineGameplay()
     {
         player_controller.accept_input = true;
-        player_controller.jump_force *= 2;
+        player_controller.jump_force /= 2;
+        player_controller.move_speed /= 2;
         camera_controller.EnableCamera();
     }
 }

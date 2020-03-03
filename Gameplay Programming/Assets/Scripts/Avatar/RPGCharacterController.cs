@@ -19,6 +19,7 @@ public class RPGCharacterController : MonoBehaviour
     public bool accept_input = true;
 
     // Movement Variables
+    public bool grounded = false;
     public const int base_move_speed = 7;
     public const int strafe_move_speed = 5;
 
@@ -96,12 +97,12 @@ public class RPGCharacterController : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 // Jump
-                if (IsGrounded())
+                if (grounded)
                 {
                     set_jump = true;
                 }
                 // Double Jump
-                else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !has_double_jumped)
+                else if (can_double_jump && !grounded && (player_animator.GetInteger("jumping") != 0) && !has_double_jumped)
                 {
                     set_double_jump = true;
                 }
@@ -157,7 +158,7 @@ public class RPGCharacterController : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
             }
 
-            if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
+            if (grounded && player_animator.GetInteger("jumping") == 0)
             {
                 velocity.y = 0;
             }
@@ -167,20 +168,20 @@ public class RPGCharacterController : MonoBehaviour
             }
 
             player_rb.velocity = velocity;
+        }
 
-            if (player_rb.velocity.y <= 0)
+        if (player_rb.velocity.y <= 0)
+        {
+            // Land
+            if (grounded)
             {
-                // Land
-                if (IsGrounded())
-                {
-                    player_animator.SetInteger("jumping", 0);
-                    has_double_jumped = false;
-                }
-                // Fall
-                else
-                {
-                    player_animator.SetInteger("jumping", 2);
-                }
+                player_animator.SetInteger("jumping", 0);
+                has_double_jumped = false;
+            }
+            // Fall
+            else
+            {
+                player_animator.SetInteger("jumping", 2);
             }
         }
 
@@ -279,6 +280,21 @@ public class RPGCharacterController : MonoBehaviour
             weapon_armed.SetActive(false);
             weapon_sheathed.SetActive(false);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        grounded = true;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        grounded = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        grounded = false;
     }
 
     public bool IsGrounded()
