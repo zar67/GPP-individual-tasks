@@ -3340,7 +3340,7 @@ GameObject:
   - component: {fileID: 842641483}
   - component: {fileID: 842641484}
   - component: {fileID: 842641485}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EnterTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4348,7 +4348,7 @@ GameObject:
   - component: {fileID: 1086570288}
   - component: {fileID: 1086570289}
   - component: {fileID: 1086570290}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Exit Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

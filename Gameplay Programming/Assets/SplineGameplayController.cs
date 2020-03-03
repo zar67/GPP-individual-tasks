@@ -103,7 +103,7 @@ public class SplineGameplayController : MonoBehaviour
 
         if (end_lerp)
         {
-            Vector3 offset = camera_controller.target.position + (camera_controller.target.forward * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
+            Vector3 offset = camera_controller.target.position + (-camera_controller.target.forward * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
             camera_controller.transform.position = Vector3.Lerp(camera_controller.transform.position, offset, camera_controller.rotation_speed * Time.deltaTime);
             camera_controller.transform.LookAt(camera_controller.target.position);
 
@@ -127,6 +127,8 @@ public class SplineGameplayController : MonoBehaviour
         player_controller.accept_input = true;
         player_controller.jump_force /= 2;
         player_controller.move_speed /= 2;
+        camera_controller.transform.position = camera_controller.target.position + (-camera_controller.target.forward * camera_controller.base_offset.x) + (camera_controller.target.up * camera_controller.base_offset.y);
+        camera_controller.transform.LookAt(camera_controller.target.position);
         camera_controller.EnableCamera();
     }
 }

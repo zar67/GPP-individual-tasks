@@ -98,6 +98,7 @@ public class RPGCameraController : MonoBehaviour
 
     public void EnableCamera()
     {
+        ResetCamera();
         move_camera = true;
     }
     public void ResetCamera()

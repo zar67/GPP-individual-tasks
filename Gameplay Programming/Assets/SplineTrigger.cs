@@ -7,9 +7,6 @@ public class SplineTrigger : MonoBehaviour
     public SplineGameplayController target;
     public bool position_start;
 
-    bool begin_lerp = false;
-    Vector3 offset;
-
     private void OnTriggerEnter(Collider other)
     {
         if (!target.triggered)
@@ -35,28 +32,15 @@ public class SplineTrigger : MonoBehaviour
 
             if (position_start)
             {
-                offset = target.camera_controller.target.position + (-target.camera_controller.target.right * target.camera_controller.base_offset.x) + (target.camera_controller.target.up * target.camera_controller.base_offset.y);
+                target.camera_controller.transform.position = target.camera_controller.target.position + (-target.camera_controller.target.right * target.camera_controller.base_offset.x) + (target.camera_controller.target.up * target.camera_controller.base_offset.y);
             }
             else
             {
-                offset = target.camera_controller.target.position - (-target.camera_controller.target.right * target.camera_controller.base_offset.x) + (target.camera_controller.target.up * target.camera_controller.base_offset.y);
+                target.camera_controller.transform.position = target.camera_controller.target.position - (-target.camera_controller.target.right * target.camera_controller.base_offset.x) + (target.camera_controller.target.up * target.camera_controller.base_offset.y);
             }
-            begin_lerp = true;
-        }
-    }
 
-    private void Update()
-    {
-        if (begin_lerp)
-        {
-            target.camera_controller.transform.position = Vector3.Lerp(target.camera_controller.transform.position, offset, target.camera_controller.rotation_speed * Time.deltaTime);
             target.camera_controller.transform.LookAt(target.camera_controller.target.position);
-
-            if (Vector3.Distance(target.camera_controller.transform.position, offset) < 0.25f)
-            {
-                begin_lerp = false;
-                target.StartSplineGameplay();
-            }
+            target.StartSplineGameplay();
         }
     }
 }

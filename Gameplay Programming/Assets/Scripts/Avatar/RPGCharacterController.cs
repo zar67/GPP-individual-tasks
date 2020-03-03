@@ -210,7 +210,7 @@ public class RPGCharacterController : MonoBehaviour
         }
         player_animator.SetFloat("horizontal_input", -Input.GetAxis("Horizontal"));
         
-        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        if ((accept_input && Input.GetAxis("Vertical") != 0) || Input.GetAxis("Horizontal") != 0)
         {
             player_animator.SetBool("move", true);
         }
