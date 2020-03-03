@@ -19,6 +19,7 @@ public class RPGCharacterController : MonoBehaviour
     public bool accept_input = true;
 
     // Movement Variables
+    public bool grounded = false;
     public const int base_move_speed = 7;
     public const int strafe_move_speed = 5;
 
@@ -96,12 +97,12 @@ public class RPGCharacterController : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 // Jump
-                if (IsGrounded())
+                if (grounded)
                 {
                     set_jump = true;
                 }
                 // Double Jump
-                else if (can_double_jump && !IsGrounded() && (player_animator.GetInteger("jumping") != 0) && !has_double_jumped)
+                else if (can_double_jump && !grounded && (player_animator.GetInteger("jumping") != 0) && !has_double_jumped)
                 {
                     set_double_jump = true;
                 }
@@ -147,19 +148,17 @@ public class RPGCharacterController : MonoBehaviour
         if (accept_input)
         {
             // Move
-            //Vector3 velocity = new Vector3(Input.GetAxis("Horizontal") * move_speed, 0, Input.GetAxis("Vertical") * move_speed);
             Vector3 velocity = (player_camera.transform.forward * Input.GetAxis("Vertical")) + (player_camera.transform.right * Input.GetAxis("Horizontal"));
             velocity = velocity.normalized * move_speed;
 
             if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             {
-                // 
                 transform.rotation = Quaternion.Euler(0f, player_camera.rotation.eulerAngles.y, 0f);
                 Quaternion new_rotation = Quaternion.LookRotation(new Vector3(velocity.x, 0, velocity.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, new_rotation, rotate_speed * Time.deltaTime);
             }
 
-            if (IsGrounded() && player_animator.GetInteger("jumping") == 0)
+            if (grounded && player_animator.GetInteger("jumping") == 0)
             {
                 velocity.y = 0;
             }
@@ -169,46 +168,54 @@ public class RPGCharacterController : MonoBehaviour
             }
 
             player_rb.velocity = velocity;
+        }
 
-            if (set_jump)
+        if (player_rb.velocity.y <= 0)
+        {
+            // Land
+            if (grounded)
             {
-                set_jump = false;
-                player_animator.SetInteger("jumping", 1);
-                player_rb.velocity = Vector3.up * jump_force;
+                player_animator.SetInteger("jumping", 0);
+                has_double_jumped = false;
             }
-
-            if (set_double_jump)
+            // Fall
+            else if (!player_animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
             {
-                set_double_jump = false;
-                has_double_jumped = true;
-                player_animator.Play("Double Jump", 0);
-                player_rb.velocity = Vector3.up * double_jump_force;
-            }
-
-            if (player_rb.velocity.y <= 0)
-            {
-                // Land
-                if (IsGrounded())
+                if (player_animator.GetInteger("jumping") == 0)
                 {
-                    player_animator.SetInteger("jumping", 0);
-                    has_double_jumped = false;
+                    player_animator.Play("Fall", 0);
                 }
-                // Fall
-                else
-                {
-                    player_animator.SetInteger("jumping", 2);
-                }
+
+                player_animator.SetInteger("jumping", 2);
             }
+        }
+
+        if (set_jump)
+        {
+            set_jump = false;
+            player_animator.SetInteger("jumping", 1);
+            player_rb.velocity = Vector3.up * jump_force;
+        }
+
+        if (set_double_jump)
+        {
+            set_double_jump = false;
+            has_double_jumped = true;
+            player_animator.Play("Double Jump", 0);
+            player_rb.velocity = Vector3.up * double_jump_force;
         }
     }
 
-    void UpdateAnimator()
+    public void UpdateAnimator()
     {
         // Move
-        player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
+        if (accept_input)
+        {
+            player_animator.SetFloat("vertical_input", Input.GetAxis("Vertical"));
+        }
         player_animator.SetFloat("horizontal_input", -Input.GetAxis("Horizontal"));
         
-        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+        if ((accept_input && Input.GetAxis("Vertical") != 0) || Input.GetAxis("Horizontal") != 0)
         {
             player_animator.SetBool("move", true);
         }
@@ -278,6 +285,21 @@ public class RPGCharacterController : MonoBehaviour
             weapon_armed.SetActive(false);
             weapon_sheathed.SetActive(false);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        grounded = true;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        grounded = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        grounded = false;
     }
 
     public bool IsGrounded()

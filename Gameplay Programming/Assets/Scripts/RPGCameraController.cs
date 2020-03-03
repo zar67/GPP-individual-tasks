@@ -15,7 +15,8 @@ public class RPGCameraController : MonoBehaviour
     bool lerping_to_axis = false;
 
     Vector3[] directions = new Vector3[4] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
-    Vector2 base_offset = new Vector2(5.5f, 2.9f);
+    [HideInInspector]
+    public Vector2 base_offset = new Vector2(5.5f, 2.9f);
     Vector3 offset;
     Vector3 nearest_dir;
 
@@ -50,7 +51,6 @@ public class RPGCameraController : MonoBehaviour
                 if (lerping_to_axis)
                 {
                     offset = Vector3.Lerp(offset, nearest_dir, rotation_speed * Time.deltaTime);
-                    Debug.Log(zoom_value);
                     zoom_value = Mathf.Lerp(zoom_value, 1, rotation_speed * Time.deltaTime);
 
                     if (Vector3.Distance(offset * zoom_value, nearest_dir) < 0.5f)
@@ -98,6 +98,7 @@ public class RPGCameraController : MonoBehaviour
 
     public void EnableCamera()
     {
+        ResetCamera();
         move_camera = true;
     }
     public void ResetCamera()
