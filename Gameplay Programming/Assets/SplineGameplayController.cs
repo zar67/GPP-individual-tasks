@@ -19,9 +19,9 @@ public class SplineGameplayController : MonoBehaviour
     [HideInInspector]
     public List<Vector3> player_spline_positions;
 
-    [HideInInspector]
+    //[HideInInspector]
     public int current_player_index = 0;
-    [HideInInspector]
+    //[HideInInspector]
     public bool triggered = false;
     bool end_lerp = false;
     Vector3 camera_offset;
@@ -58,7 +58,6 @@ public class SplineGameplayController : MonoBehaviour
                     }
                     else
                     {
-                        //player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
                         Vector3 new_pos = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index + 1], player_controller.move_speed * Time.deltaTime);
                         player_controller.transform.position = new Vector3(new_pos.x, player_controller.transform.position.y, new_pos.z);
 
@@ -70,7 +69,7 @@ public class SplineGameplayController : MonoBehaviour
                         {
                             current_player_index += 1;
 
-                            if (current_player_index + 1 == player_spline_positions.Count)
+                            if (current_player_index == player_spline_positions.Count)
                             {
                                 triggered = false;
                                 player_controller.ResetAnimator();
@@ -91,7 +90,6 @@ public class SplineGameplayController : MonoBehaviour
                     }
                     else
                     {
-                        //player_controller.transform.position = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
                         Vector3 new_pos = Vector3.Lerp(player_controller.transform.position, player_spline_positions[current_player_index - 1], player_controller.move_speed * Time.deltaTime);
                         player_controller.transform.position = new Vector3(new_pos.x, player_controller.transform.position.y, new_pos.z);
 
@@ -103,7 +101,7 @@ public class SplineGameplayController : MonoBehaviour
                         {
                             current_player_index -= 1;
 
-                            if (current_player_index - 1 == 0)
+                            if (current_player_index == 0)
                             {
                                 triggered = false;
                                 player_controller.ResetAnimator();
