@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class MovingPlatformsController : MonoBehaviour
+public class MovingPlatformsController : SwitchTarget
 {
     public PathCreator platform_spline;
 

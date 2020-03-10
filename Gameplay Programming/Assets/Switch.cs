@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformSwitch : MonoBehaviour
+public class Switch : MonoBehaviour
 {
-    public MovingPlatformsController target;
+    public SwitchTarget target;
     public CanvasGroup interact_UI;
 
-    Animator switch_animator;
-    RPGCharacterController player;
-    bool player_in_range = false;
+    protected Animator switch_animator;
+    protected RPGCharacterController player;
+    protected bool player_in_range = false;
 
-    bool clicked = false;
-
-    Vector3 start_position;
+    protected bool clicked = false;
+    protected Vector3 start_position;
 
     private void Awake()
     {
@@ -44,7 +43,6 @@ public class PlatformSwitch : MonoBehaviour
     {
         if (!clicked &&
             player_in_range &&
-            !target.triggered &&
             interact_UI.alpha != 2)
         {
             float new_alpha = Mathf.Lerp(interact_UI.alpha, 2, 0.1f);
@@ -56,8 +54,7 @@ public class PlatformSwitch : MonoBehaviour
 
             interact_UI.alpha = new_alpha;
         }
-        else if ((clicked || !player_in_range ||
-            target.triggered) && interact_UI.alpha != 0)
+        else if ((clicked || !player_in_range) && interact_UI.alpha != 0)
         {
             float new_alpha = Mathf.Lerp(interact_UI.alpha, 0, 0.1f);
 
@@ -71,14 +68,13 @@ public class PlatformSwitch : MonoBehaviour
 
         if (Input.GetButtonDown("LeftAttack") &&
             player_in_range &&
-            !clicked &&
-            !target.triggered &&
-            GetComponent<PlatformCutscene>().state == PlatformCutscene.CutsceneState.NONE)
+            !Triggered() &&
+            GetComponent<Cutscene>().state == Cutscene.CutsceneState.NONE)
         {
-            GetComponent<PlatformCutscene>().StartCutscene();
+            GetComponent<Cutscene>().StartCutscene();
         }
 
-        if (clicked && !target.triggered)
+        if (ReleaseButton())
         {
             Release();
         }
@@ -89,15 +85,33 @@ public class PlatformSwitch : MonoBehaviour
         }
     }
 
+    public virtual bool Triggered()
+    {
+        return clicked;
+    }
+
+    public virtual bool ReleaseButton()
+    {
+        return Triggered();
+    }
+
     public void Click()
     {
         clicked = true;
         switch_animator.SetTrigger("clicked");
     }
 
-    void Release()
+    public void Release()
     {
         switch_animator.SetTrigger("released");
         clicked = false;
+    }
+}
+
+public class SwitchTarget : MonoBehaviour
+{
+    public virtual void Trigger()
+    {
+        Debug.Log("Triggered");
     }
 }

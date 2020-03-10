@@ -1,16 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformCutscene : MonoBehaviour
+public class Cutscene : MonoBehaviour
 {
     public enum CutsceneState
     {
         NONE,
         MOVE_TO_SWITCH,
         PRESS_SWITCH,
-        MOVE_TO_DOOR,
-        OPEN_DOOR,
+        MOVE_TO_ACTION,
+        TRIGGER_ACTION,
         MOVE_BACK
     }
 
@@ -19,26 +18,26 @@ public class PlatformCutscene : MonoBehaviour
     public Transform action_camera_target;
     public bool camera_return_to_start_position;
 
-    Vector3 return_position;
-    Quaternion return_rotation;
+    protected Vector3 return_position;
+    protected Quaternion return_rotation;
 
-    RPGCharacterController player;
-    GameObject player_camera;
-    PlatformSwitch platform_switch;
+    protected RPGCharacterController player;
+    protected GameObject player_camera;
+    protected Switch target_switch;
     [HideInInspector]
     public CutsceneState state = CutsceneState.NONE;
 
-    float move_speed = 2;
-    float rotation_speed = 3.5f;
+    protected float move_speed = 2;
+    protected float rotation_speed = 3.5f;
 
-    bool pressing_swtich = false;
-    bool opening_door = false;
+    protected bool pressing_swtich = false;
+    protected bool triggered_action = false;
 
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<RPGCharacterController>();
         player_camera = GameObject.FindGameObjectWithTag("MainCamera");
-        platform_switch = GetComponent<PlatformSwitch>();
+        target_switch = GetComponent<Switch>();
     }
 
     private void Update()
@@ -64,22 +63,22 @@ public class PlatformCutscene : MonoBehaviour
                     }
                     break;
                 }
-            case CutsceneState.MOVE_TO_DOOR:
+            case CutsceneState.MOVE_TO_ACTION:
                 {
                     player_camera.transform.position = Vector3.Lerp(player_camera.transform.position, action_camera_target.position, move_speed * 0.75f * Time.deltaTime);
                     player_camera.transform.rotation = Quaternion.Lerp(player_camera.transform.rotation, action_camera_target.rotation, rotation_speed * Time.deltaTime);
 
                     if (Vector3.Distance(player_camera.transform.position, action_camera_target.position) < 0.25f)
                     {
-                        state = CutsceneState.OPEN_DOOR;
+                        state = CutsceneState.TRIGGER_ACTION;
                     }
                     break;
                 }
-            case CutsceneState.OPEN_DOOR:
+            case CutsceneState.TRIGGER_ACTION:
                 {
-                    if (!opening_door)
+                    if (!triggered_action)
                     {
-                        StartCoroutine(OpenDoor());
+                        StartCoroutine(TriggerAction());
                     }
                     break;
                 }
@@ -140,15 +139,20 @@ public class PlatformCutscene : MonoBehaviour
         state = CutsceneState.PRESS_SWITCH;
     }
 
-    IEnumerator OpenDoor()
+    public virtual void Trigger()
     {
-        opening_door = true;
-        platform_switch.target.triggered = true;
+        Debug.Log("Triggered");
+    }
+
+    IEnumerator TriggerAction()
+    {
+        triggered_action = true;
+        Trigger();
 
         yield return new WaitForSeconds(1);
 
         state = CutsceneState.MOVE_BACK;
-        opening_door = false;
+        triggered_action = false;
     }
 
     IEnumerator PressSwitch()
@@ -158,11 +162,11 @@ public class PlatformCutscene : MonoBehaviour
 
         yield return new WaitForSeconds(0.15f);
 
-        platform_switch.Click();
+        target_switch.Click();
 
         yield return new WaitForSeconds(0.5f);
 
-        state = CutsceneState.MOVE_TO_DOOR;
+        state = CutsceneState.MOVE_TO_ACTION;
         pressing_swtich = false;
     }
 }
