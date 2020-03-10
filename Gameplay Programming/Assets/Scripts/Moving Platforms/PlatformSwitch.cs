@@ -11,6 +11,6 @@ public class PlatformSwitch : Switch
 
     public override bool ReleaseButton()
     {
-        return !target.GetComponent<MovingPlatformsController>().triggered;
+        return GetComponent<Cutscene>().state == Cutscene.CutsceneState.NONE && clicked && !target.GetComponent<MovingPlatformsController>().triggered;
     }
 }

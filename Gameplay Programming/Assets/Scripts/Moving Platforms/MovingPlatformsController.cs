@@ -14,6 +14,7 @@ public class MovingPlatformsController : SwitchTarget
     public bool end_after_time = false;
     public float end_delay = 0f;
     public bool mechanical_movement = true;
+    public float mechanical_movement_delay;
     public bool floating = false;
     public float start_y = 0;
     public bool rotate_to_spline = false;

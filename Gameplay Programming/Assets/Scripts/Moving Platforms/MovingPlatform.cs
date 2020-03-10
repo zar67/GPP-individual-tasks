@@ -8,11 +8,11 @@ public class MovingPlatform : MonoBehaviour
     GameObject player = null;
 
     public int current_index = 0;
-
     bool move = false;
 
     private void Update()
     {
+        // TODO: Rotate Under Weight of Player
         if (move)
         {
             Vector3 direction = (controller.spline_positions[current_index + 1] - transform.position).normalized;
