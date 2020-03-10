@@ -26,6 +26,7 @@ public class MovingPlatformsController : SwitchTarget
     public List<Vector3> spline_positions = new List<Vector3> { };
     List<MovingPlatform> platforms = new List<MovingPlatform> { };
 
+    float mechanical_move_timer = 0;
     float end_timer = 0;
     float spawn_timer = 0;
     float time_between_spawns = 10;
@@ -72,6 +73,24 @@ public class MovingPlatformsController : SwitchTarget
                 new_platform.StartPlatform(this);
                 platforms.Add(new_platform);
             }
+
+            if (mechanical_movement)
+            {
+                if (mechanical_move_timer > mechanical_movement_delay)
+                {
+                    foreach (MovingPlatform platform in platforms)
+                    {
+                        if (platform.MechanicalMove())
+                        {
+                            mechanical_move_timer = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    mechanical_move_timer += Time.deltaTime;
+                }
+            }
         }
     }
 
@@ -83,5 +102,10 @@ public class MovingPlatformsController : SwitchTarget
     public void StopPlatforms()
     {
         triggered = false;
+    }
+
+    public void RemovePlatform(MovingPlatform platform)
+    {
+        platforms.Remove(platform);
     }
 }

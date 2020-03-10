@@ -6147,11 +6147,11 @@ MonoBehaviour:
   end_after_time: 0
   end_delay: 5
   mechanical_movement: 0
-  mechanical_movement_delay: 0.2
+  mechanical_movement_delay: 0
   floating: 1
   start_y: 0
   rotate_to_spline: 0
-  distance_between_platforms: 40
+  distance_between_platforms: 30
   platform_move_speed: 5
   bezier_position_divisions: 10
   spline_positions: []
@@ -7094,15 +7094,15 @@ MonoBehaviour:
   platforms_parent: {fileID: 358403661}
   platform_prefab: {fileID: 1932242308039331398, guid: fa240d87af974e946912761ff2b85534,
     type: 3}
-  trigger_on_start: 0
+  trigger_on_start: 1
   end_after_time: 0
   end_delay: 5
   mechanical_movement: 1
-  mechanical_movement_delay: 0.2
+  mechanical_movement_delay: 0.5
   floating: 1
   start_y: 0
   rotate_to_spline: 0
-  distance_between_platforms: 15
+  distance_between_platforms: 30
   platform_move_speed: 5
   bezier_position_divisions: 10
   spline_positions: []
@@ -8750,22 +8750,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path:
     points:
-    - {x: -0.56174564, y: 1.728324, z: -53.060406}
-    - {x: -0.93139863, y: 1.7341948, z: -53.737762}
-    - {x: -1.3010516, y: 1.7400653, z: -54.415123}
-    - {x: -0.5571356, y: 1.7363305, z: -55.145626}
-    - {x: 3.9470344, y: 1.7137173, z: -59.568577}
-    - {x: 7.923901, y: 1.6393952, z: -50.179844}
-    - {x: 12.066205, y: 1.6243384, z: -54.943417}
-    - {x: 14.868839, y: 1.6141511, z: -58.166397}
-    - {x: 8.892488, y: 1.5769539, z: -59.535526}
-    - {x: 10.745079, y: 1.6738682, z: -63.38273}
-    - {x: 12.078759, y: 1.7436367, z: -66.15233}
-    - {x: 14.221288, y: 2.0776725, z: -63.988632}
-    - {x: 16.086332, y: 1.8678741, z: -66.42417}
-    - {x: 17.328777, y: 1.7281117, z: -68.04667}
-    - {x: 17.205708, y: 1.4772041, z: -69.1962}
-    - {x: 17.082636, y: 1.2262964, z: -70.34572}
+    - {x: -0.56122494, y: 2.5469859, z: -53.010925}
+    - {x: -0.934112, y: 2.5379367, z: -53.704235}
+    - {x: -1.3069991, y: 2.5288877, z: -54.397545}
+    - {x: -0.54453564, y: 2.5178459, z: -55.141922}
+    - {x: 3.9726224, y: 2.4524298, z: -59.551926}
+    - {x: 7.934202, y: 2.5176208, z: -50.177944}
+    - {x: 12.080326, y: 2.5062222, z: -54.938896}
+    - {x: 14.894569, y: 2.4984853, z: -58.170464}
+    - {x: 8.900614, y: 2.5389655, z: -59.550556}
+    - {x: 10.766407, y: 2.4941654, z: -63.407997}
+    - {x: 12.0978155, y: 2.4621966, z: -66.16062}
+    - {x: 14.254993, y: 2.4260826, z: -63.974964}
+    - {x: 16.085918, y: 2.3975537, z: -66.42395}
+    - {x: 17.05118, y: 2.3825133, z: -67.71505}
+    - {x: 16.934486, y: 2.3879495, z: -68.63953}
+    - {x: 16.817795, y: 2.3933856, z: -69.564}
     is_closed: 0
     auto_set_control_points: 1
 --- !u!4 &1888736456 stripped

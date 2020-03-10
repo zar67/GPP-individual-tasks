@@ -37,11 +37,9 @@ public class MovingPlatform : MonoBehaviour
 
             if (controller.mechanical_movement)
             {
-                Vector3 new_pos = Vector3.Lerp(transform.position, controller.spline_positions[current_index + 1], controller.platform_move_speed * Time.deltaTime);
-                transform.position = new_pos;
-
                 if (!controller.floating)
                 {
+                    Vector3 new_pos = Vector3.Lerp(transform.position, controller.spline_positions[current_index + 1], controller.platform_move_speed * Time.deltaTime);
                     transform.position = new Vector3(new_pos.x, controller.start_y, new_pos.z);
                 }
             }
@@ -69,6 +67,14 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    public bool MechanicalMove()
+    {
+        Vector3 new_pos = Vector3.Lerp(transform.position, controller.spline_positions[current_index + 1], controller.platform_move_speed * 5 * Time.deltaTime);
+        transform.position = new_pos;
+
+        return Vector3.Distance(transform.position, controller.spline_positions[current_index + 1]) < 0.5f;
+    }
+
     public void StartPlatform(MovingPlatformsController platform_controller)
     {
         controller = platform_controller;
@@ -88,6 +94,7 @@ public class MovingPlatform : MonoBehaviour
                 player = null;
             }
 
+            controller.RemovePlatform(this);
             Destroy(gameObject);
         }
     }
