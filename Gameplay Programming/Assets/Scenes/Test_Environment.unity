@@ -6105,6 +6105,8 @@ MonoBehaviour:
   platform_prefab: {fileID: 1932242308039331398, guid: fa240d87af974e946912761ff2b85534,
     type: 3}
   trigger_on_start: 0
+  end_after_time: 0
+  end_delay: 5
   mechanical_movement: 0
   floating: 1
   start_y: 0
@@ -8898,16 +8900,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1442312381}
     m_Modifications:
-    - target: {fileID: -2445266632330599200, guid: efb36db4b68acb44ca054f84b5b909a6,
-        type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1442312380}
-    - target: {fileID: -2445266632330599200, guid: efb36db4b68acb44ca054f84b5b909a6,
-        type: 3}
-      propertyPath: interact_UI
-      value: 
-      objectReference: {fileID: 464867325}
     - target: {fileID: 509583939985043315, guid: efb36db4b68acb44ca054f84b5b909a6,
         type: 3}
       propertyPath: m_Name
@@ -8968,6 +8960,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2445266632330599200, guid: efb36db4b68acb44ca054f84b5b909a6,
+        type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1442312380}
+    - target: {fileID: -2445266632330599200, guid: efb36db4b68acb44ca054f84b5b909a6,
+        type: 3}
+      propertyPath: interact_UI
+      value: 
+      objectReference: {fileID: 464867325}
     - target: {fileID: 6635284288079121832, guid: efb36db4b68acb44ca054f84b5b909a6,
         type: 3}
       propertyPath: m_LocalRotation.x

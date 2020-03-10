@@ -11,6 +11,8 @@ public class MovingPlatformsController : MonoBehaviour
     public GameObject platform_prefab;
 
     public bool trigger_on_start = false;
+    public bool end_after_time = false;
+    public float end_delay = 0f;
     public bool mechanical_movement = true;
     public bool floating = false;
     public float start_y = 0;
@@ -23,7 +25,8 @@ public class MovingPlatformsController : MonoBehaviour
     public List<Vector3> spline_positions = new List<Vector3> { };
     List<MovingPlatform> platforms = new List<MovingPlatform> { };
 
-    float timer = 0;
+    float end_timer = 0;
+    float spawn_timer = 0;
     float time_between_spawns = 10;
     [HideInInspector]
     public bool triggered;
@@ -33,7 +36,7 @@ public class MovingPlatformsController : MonoBehaviour
     {
         triggered = trigger_on_start;
         time_between_spawns = distance_between_platforms / platform_move_speed;
-        timer = time_between_spawns;
+        spawn_timer = time_between_spawns;
 
         // Get Spline Points
         for (int i = 0; i < platform_spline.path.NumSegments; i++)
@@ -49,11 +52,21 @@ public class MovingPlatformsController : MonoBehaviour
     {
         if (triggered)
         {
-            timer += Time.deltaTime;
-
-            if (timer > time_between_spawns)
+            if (end_after_time)
             {
-                timer = 0;
+                end_timer += Time.deltaTime;
+
+                if (end_timer > end_delay)
+                {
+                    triggered = false;
+                    end_timer = 0;
+                }
+            }
+            spawn_timer += Time.deltaTime;
+
+            if (spawn_timer > time_between_spawns)
+            {
+                spawn_timer = 0;
                 MovingPlatform new_platform = Instantiate(platform_prefab, spline_positions[0], Quaternion.identity, platforms_parent).GetComponent<MovingPlatform>();
                 new_platform.StartPlatform(this);
                 platforms.Add(new_platform);
