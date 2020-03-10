@@ -12,6 +12,7 @@ public class MovingPlatformsController : MonoBehaviour
 
     public bool mechanical_movement = true;
     public bool floating = false;
+    public float start_y = 0;
     public bool rotate_to_spline = false;
     public float distance_between_platforms = 10;
     public float platform_move_speed = 5;
@@ -50,7 +51,6 @@ public class MovingPlatformsController : MonoBehaviour
             {
                 timer = 0;
                 MovingPlatform new_platform = Instantiate(platform_prefab, spline_positions[0], Quaternion.identity, platforms_parent).GetComponent<MovingPlatform>();
-                new_platform.GetComponent<Rigidbody>().useGravity = !floating;
                 new_platform.StartPlatform(this);
                 platforms.Add(new_platform);
             }
