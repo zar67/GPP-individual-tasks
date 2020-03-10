@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PathCreation;
 
 public class MovingPlatform : MonoBehaviour
 {
@@ -10,93 +11,80 @@ public class MovingPlatform : MonoBehaviour
     public int current_index = 0;
     bool move = false;
 
+    EndOfPathInstruction end = EndOfPathInstruction.Stop;
+    float distance_travelled = 0;
+
+    // Mechanical Move
+    bool moving = false;
+    float start_dist = 0;
+
     private void Update()
     {
         // TODO: Rotate Under Weight of Player
         if (move)
         {
-            Vector3 direction = (controller.spline_positions[current_index + 1] - transform.position).normalized;
-
-            if (controller.rotate_to_spline && direction != Vector3.zero)
+            if (!controller.mechanical_movement)
             {
-                if (controller.floating)
-                {
-                    Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * controller.platform_move_speed);
-                }
-                else
-                {
-                    Vector3 target = direction;
-                    target.y = controller.start_y;
-                    Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(target), Time.deltaTime * controller.platform_move_speed);
-                }
+                distance_travelled += controller.platform_move_speed * Time.deltaTime;
+                transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, end);
+            }
+
+            if (controller.rotate_to_spline)
+            {
+                transform.rotation = controller.spline.path.GetRotationAtDistance(distance_travelled, end);
             }
             else
             {
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
 
-            if (controller.mechanical_movement)
+            if (distance_travelled >= controller.spline.path.length)
             {
-                if (!controller.floating)
-                {
-                    Vector3 new_pos = Vector3.Lerp(transform.position, controller.spline_positions[current_index + 1], controller.platform_move_speed * Time.deltaTime);
-                    transform.position = new Vector3(new_pos.x, controller.start_y, new_pos.z);
-                }
-            }
-            else
-            {
-                transform.position += direction * Time.deltaTime * controller.platform_move_speed * 0.5f;
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * controller.platform_move_speed);
-            }
-
-            if (!controller.floating)
-            {
-                Vector3 target = controller.spline_positions[current_index + 1];
-                target.y = controller.start_y;
-
-                if (Vector3.Distance(transform.position, target) < 0.5f)
-                {
-                    NextPosition();
-                }
-            }
-
-            if (Vector3.Distance(transform.position, controller.spline_positions[current_index + 1]) < 0.5f)
-            {
-                NextPosition();
+                End();
             }
         }
     }
 
     public bool MechanicalMove()
     {
-        Vector3 new_pos = Vector3.Lerp(transform.position, controller.spline_positions[current_index + 1], controller.platform_move_speed * 5 * Time.deltaTime);
-        transform.position = new_pos;
+        if (moving)
+        {
+            distance_travelled += controller.platform_move_speed * Time.deltaTime;
+            transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, end);
 
-        return Vector3.Distance(transform.position, controller.spline_positions[current_index + 1]) < 0.5f;
+            if (distance_travelled >= start_dist + controller.mechanical_movement_distance)
+            {
+                moving = false;
+                return true;
+            }
+
+            return false;
+        }
+        else
+        {
+            start_dist = distance_travelled;
+            moving = true;
+            return false;
+        }
     }
 
     public void StartPlatform(MovingPlatformsController platform_controller)
     {
         controller = platform_controller;
-        transform.rotation = Quaternion.LookRotation((controller.spline_positions[current_index + 1] - transform.position).normalized);
+        transform.rotation = Quaternion.LookRotation((controller.spline.path.GetPoint(current_index + 1) - transform.position).normalized);
         move = true;
     }
 
-    void NextPosition()
+    void End()
     {
-        current_index += 1;
-
-        if (current_index == controller.spline_positions.Count - 1)
+        if (player != null)
         {
-            if (player != null)
-            {
-                player.transform.parent = null;
-                player = null;
-            }
-
-            controller.RemovePlatform(this);
-            Destroy(gameObject);
+            player.transform.parent = null;
+            player = null;
         }
+
+        controller.RemovePlatform(this);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

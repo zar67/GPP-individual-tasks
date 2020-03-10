@@ -6,7 +6,7 @@ using UnityEditor;
 public class SplineGameplayController : MonoBehaviour
 {
    // References
-    public PathCreator player_spline;
+    public SplineCreator player_spline;
 
     [HideInInspector]
     public RPGCharacterController player_controller;
