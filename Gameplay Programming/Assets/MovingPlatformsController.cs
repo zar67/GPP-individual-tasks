@@ -10,6 +10,7 @@ public class MovingPlatformsController : MonoBehaviour
     public Transform platforms_parent;
     public GameObject platform_prefab;
 
+    public bool trigger_on_start = false;
     public bool mechanical_movement = true;
     public bool floating = false;
     public float start_y = 0;
@@ -24,12 +25,15 @@ public class MovingPlatformsController : MonoBehaviour
 
     float timer = 0;
     float time_between_spawns = 10;
-    bool triggered = true;
+    [HideInInspector]
+    public bool triggered;
 
     // Start is called before the first frame update
     void Awake()
     {
+        triggered = trigger_on_start;
         time_between_spawns = distance_between_platforms / platform_move_speed;
+        timer = time_between_spawns;
 
         // Get Spline Points
         for (int i = 0; i < platform_spline.path.NumSegments; i++)
