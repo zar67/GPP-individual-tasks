@@ -381,18 +381,16 @@ public class RPGCharacterController : MonoBehaviour
 
     void Hit()
     {
-        if (!hit)
-        {
-            hit = true;
+        hit = true;
 
-            foreach (AttackManager attack in attack_colliders)
+        foreach (AttackManager attack in attack_colliders)
+        {
+            if (attack.collided != null)
             {
-                if (attack.collided != null)
+                if (attack.collided != null && attack.collided.GetComponent<Slime>() != null)
                 {
-                    if (attack.collided.GetComponent<Slime>() != null)
-                    {
-                        attack.collided.GetComponent<Slime>().TakeDamage(attack_damage);
-                    }
+                    attack.collided.GetComponent<Slime>().TakeDamage(attack_damage);
+                    return;
                 }
             }
         }
