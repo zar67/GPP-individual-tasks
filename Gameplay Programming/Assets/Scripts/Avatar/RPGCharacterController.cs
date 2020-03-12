@@ -373,7 +373,7 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetTrigger("hit");
         health -= amount;
 
-        if (health < 0)
+        if (health <= 0)
         {
             Death();
         }
@@ -381,14 +381,19 @@ public class RPGCharacterController : MonoBehaviour
 
     void Hit()
     {
-        hit = true;
-
-        foreach (AttackManager attack in attack_colliders)
+        if (!hit)
         {
-            if (attack.collided != null )
+            hit = true;
+
+            foreach (AttackManager attack in attack_colliders)
             {
-                Debug.Log("ATTACKED " + attack.collided.name);
-                // Call Damage on attack.collided script
+                if (attack.collided != null)
+                {
+                    if (attack.collided.GetComponent<Slime>() != null)
+                    {
+                        attack.collided.GetComponent<Slime>().TakeDamage(attack_damage);
+                    }
+                }
             }
         }
     }
