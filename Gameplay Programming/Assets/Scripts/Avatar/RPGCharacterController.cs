@@ -53,7 +53,7 @@ public class RPGCharacterController : MonoBehaviour
 
     // Attack 
     float health = 100;
-    float attack_damage = 10f;
+    public float attack_damage = 10f;
     [HideInInspector]
     public bool hit;
     AttackManager[] attack_colliders;

@@ -102,9 +102,9 @@ public class Slime : MonoBehaviour
 
     public enum Size
     {
-        SMALL = 1,
-        MEDIUM = 2,
-        LARGE = 3
+        SMALL = 0,
+        MEDIUM = 1,
+        LARGE = 2
     };
 }
  

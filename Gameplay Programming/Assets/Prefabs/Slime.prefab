@@ -160,7 +160,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff9667b483b2a84d9e277e628847a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarUI: {fileID: 897866773341805807}
   startSize: 2
   starting_health: 20
   sizeScaling:
@@ -169,6 +168,7 @@ MonoBehaviour:
   - 1.8
   current_size: 0
   health: 0
+  healthBarUI: {fileID: 897866773341805807}
 --- !u!65 &1353357682
 BoxCollider:
   m_ObjectHideFlags: 0
