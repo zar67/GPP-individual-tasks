@@ -289,12 +289,22 @@ public class RPGCharacterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        grounded = true;
+        if (other.gameObject.layer == LayerMask.NameToLayer("Walkable"))
+        {
+            grounded = true;
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast"))
+        {
+            grounded = false;
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        grounded = true;
+        if (other.gameObject.layer == LayerMask.NameToLayer("Walkable"))
+        {
+            grounded = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)

@@ -8,19 +8,16 @@ public class MovingPlatform : MonoBehaviour
     MovingPlatformsController controller;
     GameObject player = null;
 
-    public int current_index = 0;
-    bool move = false;
-
+    bool active = false;
     float distance_travelled = 0;
 
     // Mechanical Move
-    bool moving = false;
+    bool mechanically_moving = false;
     float start_dist = 0;
 
     private void Update()
     {
-        // TODO: Rotate Under Weight of Player
-        if (move)
+        if (active)
         {
             if (!controller.mechanicalMovement)
             {
@@ -54,14 +51,14 @@ public class MovingPlatform : MonoBehaviour
 
     public bool MechanicalMove()
     {
-        if (moving)
+        if (mechanically_moving)
         {
             distance_travelled += controller.platformMoveSpeed * Time.deltaTime;
             transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, controller.endInstruction);
 
             if (distance_travelled >= start_dist + controller.mechanicalDistance)
             {
-                moving = false;
+                mechanically_moving = false;
                 return true;
             }
 
@@ -70,7 +67,7 @@ public class MovingPlatform : MonoBehaviour
         else
         {
             start_dist = distance_travelled;
-            moving = true;
+            mechanically_moving = true;
             return false;
         }
     }
@@ -78,8 +75,8 @@ public class MovingPlatform : MonoBehaviour
     public void StartPlatform(MovingPlatformsController platform_controller)
     {
         controller = platform_controller;
-        transform.rotation = Quaternion.LookRotation((controller.spline.path.GetPoint(current_index + 1) - transform.position).normalized);
-        move = true;
+        transform.rotation = Quaternion.LookRotation((controller.spline.path.GetPoint(1) - transform.position).normalized);
+        active = true;
     }
 
     void End()

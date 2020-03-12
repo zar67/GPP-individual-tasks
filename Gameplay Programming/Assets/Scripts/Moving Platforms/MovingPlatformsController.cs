@@ -24,16 +24,15 @@ public class MovingPlatformsController : SwitchTarget
     public float platformMoveSpeed = 3;
 
     [Header("Rotation Variables")]
-    public bool rotateXWithSpline = false;
-    public bool rotateYWithSpline = false;
-    public bool rotateZWithSpline = false;
+    public bool rotateWithWeight = false;
+    public bool rotateXWithSpline = true;
+    public bool rotateYWithSpline = true;
+    public bool rotateZWithSpline = true;
 
     [Header("Mechanical Movement")]
     public bool mechanicalMovement = false;
     public float mechanicalDelay = 2;
     public float mechanicalDistance = 1;
-
-    
 
     List<MovingPlatform> platforms = new List<MovingPlatform> { };
 
