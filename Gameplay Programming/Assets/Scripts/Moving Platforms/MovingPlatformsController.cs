@@ -6,20 +6,34 @@ using PathCreation;
 
 public class MovingPlatformsController : SwitchTarget
 {
+    [Header("Spline Variables")]
     public PathCreator spline;
+    public EndOfPathInstruction endInstruction;
 
-    public Transform platforms_parent;
-    public GameObject platform_prefab;
+    [Header("References")]
+    public Transform platformsParent;
+    public GameObject platformsPrefab;
 
-    public bool trigger_on_start = false;
-    public bool end_after_time = false;
-    public float end_delay = 0f;
-    public bool mechanical_movement = true;
-    public float mechanical_movement_delay;
-    public float mechanical_movement_distance = 1;
-    public bool rotate_to_spline = false;
-    public float distance_between_platforms = 10;
-    public float platform_move_speed = 5;
+    [Header("Trigger Variables")]
+    public bool triggerOnStart = false;
+    public bool stopAfterTime = false;
+    public float stopDelay = 0f;
+
+    [Header("Movement Variables")]
+    public float distanceBetweenPlatforms = 10;
+    public float platformMoveSpeed = 3;
+
+    [Header("Rotation Variables")]
+    public bool rotateXWithSpline = false;
+    public bool rotateYWithSpline = false;
+    public bool rotateZWithSpline = false;
+
+    [Header("Mechanical Movement")]
+    public bool mechanicalMovement = false;
+    public float mechanicalDelay = 2;
+    public float mechanicalDistance = 1;
+
+    
 
     List<MovingPlatform> platforms = new List<MovingPlatform> { };
 
@@ -27,33 +41,33 @@ public class MovingPlatformsController : SwitchTarget
     float end_timer = 0;
     float spawn_timer = 0;
     float time_between_spawns = 10;
-    //[HideInInspector]
+
+    [HideInInspector]
     public bool triggered;
 
     void Awake()
     {
-        triggered = trigger_on_start;
-        time_between_spawns = distance_between_platforms / platform_move_speed;
-        spawn_timer = time_between_spawns;
+        triggered = triggerOnStart;
+        time_between_spawns = distanceBetweenPlatforms / platformMoveSpeed;
 
-        if (mechanical_movement)
+        if (triggered)
         {
-            mechanical_move_timer = mechanical_movement_delay;
-            MovingPlatform new_platform = Instantiate(platform_prefab, spline.path.GetPoint(0), Quaternion.identity, platforms_parent).GetComponent<MovingPlatform>();
+            MovingPlatform new_platform = Instantiate(platformsPrefab, spline.path.GetPoint(0), Quaternion.identity, platformsParent).GetComponent<MovingPlatform>();
             new_platform.StartPlatform(this);
             platforms.Add(new_platform);
         }
+        
     }
 
     void Update()
     {
         if (triggered)
         {
-            if (end_after_time)
+            if (stopAfterTime)
             {
                 end_timer += Time.deltaTime;
 
-                if (end_timer > end_delay)
+                if (end_timer > stopDelay)
                 {
                     triggered = false;
                     end_timer = 0;
@@ -61,17 +75,17 @@ public class MovingPlatformsController : SwitchTarget
             }
 
             spawn_timer += Time.deltaTime;
-            if (!mechanical_movement && spawn_timer > time_between_spawns)
+            if (!mechanicalMovement && endInstruction != EndOfPathInstruction.Reverse && spawn_timer > time_between_spawns)
             {
                 spawn_timer = 0;
-                MovingPlatform new_platform = Instantiate(platform_prefab, spline.path.GetPoint(0), Quaternion.identity, platforms_parent).GetComponent<MovingPlatform>();
+                MovingPlatform new_platform = Instantiate(platformsPrefab, spline.path.GetPoint(0), Quaternion.identity, platformsParent).GetComponent<MovingPlatform>();
                 new_platform.StartPlatform(this);
                 platforms.Add(new_platform);
             }
 
-            if (mechanical_movement)
+            if (mechanicalMovement)
             {
-                if (mechanical_move_timer > mechanical_movement_delay)
+                if (mechanical_move_timer > mechanicalDelay)
                 {
                     bool finished = false;
                     foreach (MovingPlatform platform in platforms)
@@ -85,7 +99,7 @@ public class MovingPlatformsController : SwitchTarget
 
                     if (finished)
                     {
-                        MovingPlatform new_platform = Instantiate(platform_prefab, spline.path.GetPoint(0), Quaternion.identity, platforms_parent).GetComponent<MovingPlatform>();
+                        MovingPlatform new_platform = Instantiate(platformsPrefab, spline.path.GetPoint(0), Quaternion.identity, platformsParent).GetComponent<MovingPlatform>();
                         new_platform.StartPlatform(this);
                         platforms.Add(new_platform);
                     }
@@ -100,7 +114,17 @@ public class MovingPlatformsController : SwitchTarget
 
     public void StartPlatforms()
     {
+        spawn_timer = time_between_spawns;
         triggered = true;
+
+        if (mechanicalMovement)
+        {
+            mechanical_move_timer = mechanicalDelay;
+            MovingPlatform new_platform = Instantiate(platformsPrefab, spline.path.GetPoint(0), Quaternion.identity, platformsParent).GetComponent<MovingPlatform>();
+            new_platform.StartPlatform(this);
+            platforms.Add(new_platform);
+        }
+
     }
 
     public void StopPlatforms()

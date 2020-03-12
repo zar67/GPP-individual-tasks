@@ -6,6 +6,6 @@ public class PlatformCutscene : Cutscene
 {
     public override void Trigger()
     {
-        target_switch.target.GetComponent<MovingPlatformsController>().triggered = true;
+        target_switch.target.GetComponent<MovingPlatformsController>().StartPlatforms();
     }
 }

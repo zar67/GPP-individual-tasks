@@ -11,7 +11,6 @@ public class MovingPlatform : MonoBehaviour
     public int current_index = 0;
     bool move = false;
 
-    EndOfPathInstruction end = EndOfPathInstruction.Stop;
     float distance_travelled = 0;
 
     // Mechanical Move
@@ -23,20 +22,28 @@ public class MovingPlatform : MonoBehaviour
         // TODO: Rotate Under Weight of Player
         if (move)
         {
-            if (!controller.mechanical_movement)
+            if (!controller.mechanicalMovement)
             {
-                distance_travelled += controller.platform_move_speed * Time.deltaTime;
-                transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, end);
+                distance_travelled += controller.platformMoveSpeed * Time.deltaTime;
+                transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, controller.endInstruction);
             }
 
-            if (controller.rotate_to_spline)
+            Quaternion spline_rotation = controller.spline.path.GetRotationAtDistance(distance_travelled, controller.endInstruction);
+            Vector3 new_rotation = Vector3.zero;
+
+            if (controller.rotateXWithSpline)
             {
-                transform.rotation = controller.spline.path.GetRotationAtDistance(distance_travelled, end);
+                new_rotation.x = spline_rotation.eulerAngles.x;
             }
-            else
+            if (controller.rotateYWithSpline)
             {
-                transform.rotation = Quaternion.Euler(0, 0, 0);
+                new_rotation.y = spline_rotation.eulerAngles.y;
             }
+            if (controller.rotateZWithSpline)
+            {
+                new_rotation.z = spline_rotation.eulerAngles.z;
+            }
+            transform.rotation = Quaternion.Euler(new_rotation);
 
             if (distance_travelled >= controller.spline.path.length)
             {
@@ -49,10 +56,10 @@ public class MovingPlatform : MonoBehaviour
     {
         if (moving)
         {
-            distance_travelled += controller.platform_move_speed * Time.deltaTime;
-            transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, end);
+            distance_travelled += controller.platformMoveSpeed * Time.deltaTime;
+            transform.position = controller.spline.path.GetPointAtDistance(distance_travelled, controller.endInstruction);
 
-            if (distance_travelled >= start_dist + controller.mechanical_movement_distance)
+            if (distance_travelled >= start_dist + controller.mechanicalDistance)
             {
                 moving = false;
                 return true;
@@ -77,14 +84,17 @@ public class MovingPlatform : MonoBehaviour
 
     void End()
     {
-        if (player != null)
+        if (controller.endInstruction == EndOfPathInstruction.Stop)
         {
-            player.transform.parent = null;
-            player = null;
-        }
+            if (player != null)
+            {
+                player.transform.parent = null;
+                player = null;
+            }
 
-        controller.RemovePlatform(this);
-        Destroy(gameObject);
+            controller.RemovePlatform(this);
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
