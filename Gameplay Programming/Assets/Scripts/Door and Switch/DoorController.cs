@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorController : MonoBehaviour
+public class DoorController : SwitchTarget
 {
     // Close On Timer
     public bool close_after_time;
@@ -39,7 +39,7 @@ public class DoorController : MonoBehaviour
         }
     }
 
-    public void Open()
+    public override void Trigger()
     {
         door_animator.SetTrigger("open");
     }
