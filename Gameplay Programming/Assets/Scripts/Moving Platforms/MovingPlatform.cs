@@ -40,6 +40,11 @@ public class MovingPlatform : MonoBehaviour
             {
                 new_rotation.z = spline_rotation.eulerAngles.z;
             }
+            if (controller.rotateWithWeight)
+            {
+                Vector3 point = (player.transform.position - transform.position).normalized;
+                new_rotation = (transform.rotation * Quaternion.Euler(point.z * controller.tiltMultiplier, 0, -point.x * controller.tiltMultiplier)).eulerAngles;
+            }
             transform.rotation = Quaternion.Euler(new_rotation);
 
             if (distance_travelled >= controller.spline.path.length)
@@ -75,7 +80,7 @@ public class MovingPlatform : MonoBehaviour
     public void StartPlatform(MovingPlatformsController platform_controller)
     {
         controller = platform_controller;
-        transform.rotation = Quaternion.LookRotation((controller.spline.path.GetPoint(1) - transform.position).normalized);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
         active = true;
     }
 
@@ -91,6 +96,20 @@ public class MovingPlatform : MonoBehaviour
 
             controller.RemovePlatform(this);
             Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (controller.rotateWithWeight && player != null && collision.gameObject == player)
+        {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                Vector3 collision_point = transform.InverseTransformPoint(contact.point);
+
+                Quaternion new_rotation = transform.rotation * Quaternion.Euler(0, 0, -collision_point.y * 5);
+                transform.rotation = new_rotation;
+            }
         }
     }
 

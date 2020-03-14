@@ -25,6 +25,7 @@ public class MovingPlatformsController : SwitchTarget
 
     [Header("Rotation Variables")]
     public bool rotateWithWeight = false;
+    public float tiltMultiplier = 0.2f;
     public bool rotateXWithSpline = true;
     public bool rotateYWithSpline = true;
     public bool rotateZWithSpline = true;
