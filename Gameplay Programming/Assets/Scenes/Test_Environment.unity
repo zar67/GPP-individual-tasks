@@ -729,9 +729,9 @@ MonoBehaviour:
   platformMoveSpeed: 2
   rotateWithWeight: 1
   tiltMultiplier: 0.2
-  rotateXWithSpline: 0
+  rotateXWithSpline: 1
   rotateYWithSpline: 1
-  rotateZWithSpline: 0
+  rotateZWithSpline: 1
   mechanicalMovement: 0
   mechanicalDelay: 0
   mechanicalDistance: 1
@@ -9211,7 +9211,7 @@ MonoBehaviour:
   stopDelay: 0
   distanceBetweenPlatforms: 10
   platformMoveSpeed: 5
-  rotateWithWeight: 0
+  rotateWithWeight: 1
   tiltMultiplier: 0.2
   rotateXWithSpline: 1
   rotateYWithSpline: 1
