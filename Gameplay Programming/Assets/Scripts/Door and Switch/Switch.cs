@@ -43,6 +43,7 @@ public class Switch : MonoBehaviour
     {
         if (!clicked &&
             player_in_range &&
+            !Triggered() && 
             interact_UI.alpha != 2)
         {
             float new_alpha = Mathf.Lerp(interact_UI.alpha, 2, 0.1f);
@@ -54,7 +55,7 @@ public class Switch : MonoBehaviour
 
             interact_UI.alpha = new_alpha;
         }
-        else if ((clicked || !player_in_range) && interact_UI.alpha != 0)
+        else if ((clicked || !player_in_range || Triggered()) && interact_UI.alpha != 0)
         {
             float new_alpha = Mathf.Lerp(interact_UI.alpha, 0, 0.1f);
 
@@ -68,6 +69,7 @@ public class Switch : MonoBehaviour
 
         if (Input.GetButtonDown("LeftAttack") &&
             player_in_range &&
+            !clicked && 
             !Triggered() &&
             GetComponent<Cutscene>().state == Cutscene.CutsceneState.NONE)
         {

@@ -52,8 +52,11 @@ public class RPGCharacterController : MonoBehaviour
     public DoubleJump double_jump;
 
     // Attack 
+    float health = 100;
+    public float attack_damage = 10f;
     [HideInInspector]
     public bool hit;
+    AttackManager[] attack_colliders;
 
     // Switches
     public bool in_range_of_switch = false;
@@ -69,6 +72,9 @@ public class RPGCharacterController : MonoBehaviour
         player_animator = GetComponent<Animator>();
         player_rb = GetComponent<Rigidbody>();
         player_collider = GetComponent<CapsuleCollider>();
+        attack_colliders = GetComponentsInChildren<AttackManager>();
+
+        weapon_armed.SetActive(false);
 
         // Set To Unarmed
         current_weapon = Weapons.TWO_HANDED_SWORD;
@@ -134,11 +140,6 @@ public class RPGCharacterController : MonoBehaviour
                 }
 
                 player_animator.SetBool("strafe", false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                Death();
             }
         }
     }
@@ -367,14 +368,32 @@ public class RPGCharacterController : MonoBehaviour
         ResetAnimator();
     }
 
-    public void DamagePlayer()
+    public void DamagePlayer(float amount)
     {
+        player_animator.SetTrigger("hit");
+        health -= amount;
 
+        if (health <= 0)
+        {
+            Death();
+        }
     }
 
     void Hit()
     {
         hit = true;
+
+        foreach (AttackManager attack in attack_colliders)
+        {
+            if (attack.collided != null)
+            {
+                if (attack.collided != null && attack.collided.GetComponent<Slime>() != null)
+                {
+                    attack.collided.GetComponent<Slime>().TakeDamage(attack_damage);
+                    return;
+                }
+            }
+        }
     }
 
     void NotHit()
