@@ -10,6 +10,7 @@ public class Slime : MonoBehaviour
     public float starting_health = 30;
     public float[] sizeScaling = new float[3] { 0.2f, 1, 2 };
 
+    public bool hit = false;
     public Size current_size;
     public float health = 0;
     float damage = 10;
@@ -48,7 +49,6 @@ public class Slime : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        Debug.Log("TAKE DAMAGE");
         health -= amount;
 
         if (health <= 0)
