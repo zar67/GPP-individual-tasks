@@ -55,7 +55,7 @@ public class RPGCharacterController : MonoBehaviour
     float health = 100;
     public float attack_damage = 10f;
     [HideInInspector]
-    public bool hit;
+    public bool hit_landed;
     AttackManager[] attack_colliders;
 
     // Switches
@@ -233,7 +233,7 @@ public class RPGCharacterController : MonoBehaviour
             player_animator.GetCurrentAnimatorStateInfo(3).IsName("Default"))
         {
             armed_timer = 0;
-            player_animator.SetInteger("attack", -1);
+            player_animator.SetTrigger("attack_left");
         }
         else if (Input.GetButtonDown("RightAttack") && 
             !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump") && 
@@ -241,11 +241,7 @@ public class RPGCharacterController : MonoBehaviour
             player_animator.GetCurrentAnimatorStateInfo(3).IsName("Default"))
         {
             armed_timer = 0;
-            player_animator.SetInteger("attack", 1);
-        }
-        else
-        {
-            player_animator.SetInteger("attack", 0);
+            player_animator.SetTrigger("attack_right");
         }
 
         // Kick
@@ -379,9 +375,17 @@ public class RPGCharacterController : MonoBehaviour
         }
     }
 
+    public bool playerAttacking()
+    {
+        bool unarmed_attack = player_animator.GetCurrentAnimatorStateInfo(2).IsName("Attack-L") || player_animator.GetCurrentAnimatorStateInfo(2).IsName("Attack-R");
+        bool armed_attack = player_animator.GetCurrentAnimatorStateInfo(3).IsName("Attack-L") || player_animator.GetCurrentAnimatorStateInfo(3).IsName("Attack-R");
+
+        return unarmed_attack || armed_attack;
+    }
+
     void Hit()
     {
-        hit = true;
+        hit_landed = true;
 
         foreach (AttackManager attack in attack_colliders)
         {
@@ -398,6 +402,6 @@ public class RPGCharacterController : MonoBehaviour
 
     void NotHit()
     {
-        hit = false;
+        hit_landed = false;
     }
 }
