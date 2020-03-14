@@ -56,7 +56,6 @@ public class MovingPlatformsController : SwitchTarget
             new_platform.StartPlatform(this);
             platforms.Add(new_platform);
         }
-        
     }
 
     void Update()
