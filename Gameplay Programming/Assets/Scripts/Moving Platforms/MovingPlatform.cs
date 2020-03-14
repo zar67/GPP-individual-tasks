@@ -10,6 +10,7 @@ public class MovingPlatform : MonoBehaviour
 
     bool active = false;
     float distance_travelled = 0;
+    Vector3 weight_rotation = Vector3.zero;
 
     // Mechanical Move
     bool mechanically_moving = false;
@@ -40,6 +41,12 @@ public class MovingPlatform : MonoBehaviour
             {
                 new_rotation.z = spline_rotation.eulerAngles.z;
             }
+            if (player != null && controller.rotateWithWeight)
+            {
+                Vector3 point = (player.transform.position - transform.position).normalized;
+                weight_rotation += new Vector3(point.x * controller.tiltMultiplier, 0, point.z * controller.tiltMultiplier);
+            }
+            new_rotation += weight_rotation;
             transform.rotation = Quaternion.Euler(new_rotation);
 
             if (distance_travelled >= controller.spline.path.length)
@@ -75,7 +82,7 @@ public class MovingPlatform : MonoBehaviour
     public void StartPlatform(MovingPlatformsController platform_controller)
     {
         controller = platform_controller;
-        transform.rotation = Quaternion.LookRotation((controller.spline.path.GetPoint(1) - transform.position).normalized);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
         active = true;
     }
 
@@ -91,6 +98,20 @@ public class MovingPlatform : MonoBehaviour
 
             controller.RemovePlatform(this);
             Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (controller.rotateWithWeight && player != null && collision.gameObject == player)
+        {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                Vector3 collision_point = transform.InverseTransformPoint(contact.point);
+
+                Quaternion new_rotation = transform.rotation * Quaternion.Euler(0, 0, -collision_point.y * 5);
+                transform.rotation = new_rotation;
+            }
         }
     }
 
