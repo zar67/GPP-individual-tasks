@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Slime : MonoBehaviour
 {
-    
     public Size startSize = Size.MEDIUM;
     public float starting_health = 30;
     public float[] sizeScaling = new float[3] { 0.2f, 1, 2 };
@@ -13,13 +12,23 @@ public class Slime : MonoBehaviour
     public bool hit = false;
     public Size current_size;
     public float health = 0;
-    float damage = 10;
+    public float attack_damage = 10;
+    public float move_speed = 5;
+    public float jump_force = 7;
+    public float move_delay = 1.5f;
+
+    float move_timer = 0;
+    bool jumping = false;
 
     public Slider healthBarUI;
+    Rigidbody rigid_body;
     RPGCameraController player_camera;
+    RPGCharacterController player;
 
     private void Awake()
     {
+        rigid_body = GetComponent<Rigidbody>();
+        player = GameObject.FindObjectOfType<RPGCharacterController>();
         player_camera = GameObject.FindObjectOfType<RPGCameraController>();
 
         health = starting_health;
@@ -35,15 +44,38 @@ public class Slime : MonoBehaviour
     private void Update()
     {
         healthBarUI.value = health;
-        Vector3 direction = healthBarUI.transform.position - player_camera.transform.position;
-        healthBarUI.transform.rotation = Quaternion.LookRotation(direction, transform.up);
+        Vector3 ui_rotation = healthBarUI.transform.position - player_camera.transform.position;
+        healthBarUI.transform.rotation = Quaternion.LookRotation(ui_rotation, transform.up);
+
+        Vector3 direction_to_player = player.transform.position - transform.position;
+        Vector3 rotation = Quaternion.LookRotation(direction_to_player, transform.up).eulerAngles;
+        transform.rotation = Quaternion.Euler(0, rotation.y, 0);
+        if (jumping)
+        {
+            rigid_body.velocity += direction_to_player.normalized * move_speed * Time.deltaTime;
+        }
+        else
+        {
+            move_timer += Time.deltaTime;
+
+            if (move_timer > move_delay)
+            {
+                move_timer = 0;
+                rigid_body.velocity = Vector3.up * jump_force;
+                jumping = true;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag.Equals("Player"))
         {
-            other.GetComponent<RPGCharacterController>().DamagePlayer(damage);
+            other.GetComponent<RPGCharacterController>().DamagePlayer(attack_damage);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Walkable"))
+        {
+            jumping = false;
         }
     }
 
