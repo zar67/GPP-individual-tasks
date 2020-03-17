@@ -6,19 +6,26 @@ using UnityEngine.UI;
 public class Slime : MonoBehaviour
 {
     public Size startSize = Size.MEDIUM;
-    public float starting_health = 30;
+    public float base_health = 10;
     public float[] sizeScaling = new float[3] { 0.2f, 1, 2 };
 
     public bool hit = false;
     public Size current_size;
     public float health = 0;
-    public float attack_damage = 10;
+    float attack_damage = 10;
     public float move_speed = 5;
     public float jump_force = 7;
     public float move_delay = 1.5f;
 
-    float move_timer = 0;
+    public Transform center_position;
+    public Vector2 area_size;
+    public Vector3 movement_position;
+    bool player_in_range = false;
+    public float move_timer = 0;
     bool jumping = false;
+
+    float attack_delay = 1;
+    float attack_timer = 0;
 
     public Slider healthBarUI;
     Rigidbody rigid_body;
@@ -28,13 +35,19 @@ public class Slime : MonoBehaviour
     private void Awake()
     {
         rigid_body = GetComponent<Rigidbody>();
-        player = GameObject.FindObjectOfType<RPGCharacterController>();
-        player_camera = GameObject.FindObjectOfType<RPGCameraController>();
+        player = FindObjectOfType<RPGCharacterController>();
+        player_camera = FindObjectOfType<RPGCameraController>();
 
-        health = starting_health;
+        base_health = player.attack_damage;
+
+        health = base_health * ((int)startSize + 1);
         current_size = startSize;
         float scale = sizeScaling[(int)startSize];
         transform.localScale = new Vector3(scale, scale, scale);
+
+        float x_pos = Random.Range(center_position.position.x - area_size.x, center_position.position.x + area_size.x);
+        float z_pos = Random.Range(center_position.position.z - area_size.y, center_position.position.z + area_size.y);
+        movement_position = new Vector3(x_pos, 0, z_pos);
 
         healthBarUI = GetComponentInChildren<Slider>();
         healthBarUI.transform.position = transform.position + (transform.up * sizeScaling[(int)startSize]);
@@ -47,23 +60,26 @@ public class Slime : MonoBehaviour
         Vector3 ui_rotation = healthBarUI.transform.position - player_camera.transform.position;
         healthBarUI.transform.rotation = Quaternion.LookRotation(ui_rotation, transform.up);
 
-        Vector3 direction_to_player = player.transform.position - transform.position;
-        Vector3 rotation = Quaternion.LookRotation(direction_to_player, transform.up).eulerAngles;
-        transform.rotation = Quaternion.Euler(0, rotation.y, 0);
-        if (jumping)
+        if (player_in_range)
         {
-            rigid_body.velocity += direction_to_player.normalized * move_speed * Time.deltaTime;
+            Move(player.transform.position - transform.position);
         }
         else
         {
-            move_timer += Time.deltaTime;
+            Move(movement_position - transform.position);
 
-            if (move_timer > move_delay)
+            if (Vector3.Distance(transform.position, movement_position) < 1)
             {
                 move_timer = 0;
-                rigid_body.velocity = Vector3.up * jump_force;
-                jumping = true;
+                float x_pos = Random.Range(center_position.position.x - area_size.x, center_position.position.x + area_size.x);
+                float z_pos = Random.Range(center_position.position.z - area_size.y, center_position.position.z + area_size.y);
+                movement_position = new Vector3(x_pos, 0, z_pos);
             }
+        }
+
+        if (Vector3.Distance(transform.position, player.transform.position) < 10)
+        {
+            player_in_range = true;
         }
     }
 
@@ -76,6 +92,42 @@ public class Slime : MonoBehaviour
         else if (other.gameObject.layer == LayerMask.NameToLayer("Walkable"))
         {
             jumping = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.tag.Equals("Player"))
+        {
+            attack_timer += Time.deltaTime;
+
+            if (attack_timer > attack_delay)
+            {
+                attack_timer = 0;
+                other.GetComponent<RPGCharacterController>().DamagePlayer(attack_damage);
+            }
+        }
+    }
+
+    void Move(Vector3 direction)
+    {
+        Vector3 rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), move_speed * Time.deltaTime).eulerAngles;
+        transform.rotation = Quaternion.Euler(0, rotation.y, 0);
+
+        if (jumping)
+        {
+            rigid_body.velocity += direction.normalized * move_speed * Time.deltaTime;
+        }
+        else
+        {
+            move_timer += Time.deltaTime;
+
+            if (move_timer > move_delay)
+            {
+                move_timer = 0;
+                rigid_body.velocity = Vector3.up * jump_force;
+                jumping = true;
+            }
         }
     }
 
@@ -99,27 +151,25 @@ public class Slime : MonoBehaviour
     void Split()
     {
         Slime obj_1 = Instantiate(this);
+        SetupNewSlime(obj_1);
+
         Slime obj_2 = Instantiate(this);
-    
-        float scale = sizeScaling[(int)startSize - 1];
-
-        obj_1.startSize = current_size - 1;
-        obj_1.health = starting_health;
-        obj_1.current_size = obj_1.startSize;
-        obj_1.transform.position = RandomSpawnPosition();
-        obj_1.transform.localScale = new Vector3(scale, scale, scale);
-        obj_1.healthBarUI = obj_1.GetComponentInChildren<Slider>();
-        obj_1.healthBarUI.maxValue = obj_1.health;
-
-        obj_2.startSize = current_size - 1;
-        obj_2.health = starting_health;
-        obj_2.current_size = obj_2.startSize;
-        obj_2.transform.position = RandomSpawnPosition();
-        obj_2.transform.localScale = new Vector3(scale, scale, scale);
-        obj_2.healthBarUI = obj_2.GetComponentInChildren<Slider>();
-        obj_2.healthBarUI.maxValue = obj_2.health;
+        SetupNewSlime(obj_2);
 
         Destroy(this.gameObject);
+    }
+
+    void SetupNewSlime(Slime slime)
+    {
+        float scale = sizeScaling[(int)startSize - 1];
+
+        slime.startSize = current_size - 1;
+        slime.health = base_health * ((int)slime.startSize + 1);
+        slime.current_size = slime.startSize;
+        slime.transform.position = RandomSpawnPosition();
+        slime.transform.localScale = new Vector3(scale, scale, scale);
+        slime.healthBarUI = slime.GetComponentInChildren<Slider>();
+        slime.healthBarUI.maxValue = slime.health;
     }
 
     Vector3 RandomSpawnPosition()
