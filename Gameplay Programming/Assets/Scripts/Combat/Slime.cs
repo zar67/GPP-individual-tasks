@@ -32,6 +32,8 @@ public class Slime : MonoBehaviour
     RPGCameraController player_camera;
     RPGCharacterController player;
 
+    bool move_backwards = false;
+
     private void Awake()
     {
         rigid_body = GetComponent<Rigidbody>();
@@ -88,10 +90,20 @@ public class Slime : MonoBehaviour
         if (other.gameObject.tag.Equals("Player"))
         {
             other.GetComponent<RPGCharacterController>().DamagePlayer(attack_damage);
+            move_backwards = true;
+
+            if (!jumping)
+            {
+                move_timer = 0;
+                rigid_body.velocity = Vector3.up * jump_force;
+                jumping = true;
+            }
+            
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Walkable"))
         {
             jumping = false;
+            move_backwards = false;
         }
     }
 
@@ -105,6 +117,15 @@ public class Slime : MonoBehaviour
             {
                 attack_timer = 0;
                 other.GetComponent<RPGCharacterController>().DamagePlayer(attack_damage);
+                move_backwards = true;
+
+                if (!jumping)
+                {
+                    move_timer = 0;
+                    rigid_body.velocity = Vector3.up * jump_force;
+                    jumping = true;
+                }
+                
             }
         }
     }
@@ -114,19 +135,26 @@ public class Slime : MonoBehaviour
         Vector3 rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), move_speed * Time.deltaTime).eulerAngles;
         transform.rotation = Quaternion.Euler(0, rotation.y, 0);
 
-        if (jumping)
+        if (move_backwards)
         {
-            rigid_body.velocity += direction.normalized * move_speed * Time.deltaTime;
+            rigid_body.velocity -= direction.normalized * move_speed * Time.deltaTime;
         }
         else
         {
-            move_timer += Time.deltaTime;
-
-            if (move_timer > move_delay)
+            if (jumping)
             {
-                move_timer = 0;
-                rigid_body.velocity = Vector3.up * jump_force;
-                jumping = true;
+                rigid_body.velocity += direction.normalized * move_speed * Time.deltaTime;
+            }
+            else
+            {
+                move_timer += Time.deltaTime;
+
+                if (move_timer > move_delay)
+                {
+                    move_timer = 0;
+                    rigid_body.velocity = Vector3.up * jump_force;
+                    jumping = true;
+                }
             }
         }
     }
