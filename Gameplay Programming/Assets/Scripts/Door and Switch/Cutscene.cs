@@ -158,7 +158,7 @@ public class Cutscene : MonoBehaviour
     IEnumerator PressSwitch()
     {
         pressing_swtich = true;
-        player.GetComponent<Animator>().Play("Attack-L3", 2);
+        player.GetComponent<Animator>().Play("Attack-L", 2);
 
         yield return new WaitForSeconds(0.15f);
 

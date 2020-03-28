@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 14156038643901550}
   - component: {fileID: 2883706184428187171}
   - component: {fileID: 1551200798546302626}
+  - component: {fileID: 622059790}
   m_Layer: 11
   m_Name: Slime Object
   m_TagString: Untagged
@@ -172,6 +173,25 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!95 &622059790
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771283219464287127}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 05d024e57101a2a44ad036f17b741450, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4563753484320499378
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,23 +275,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff9667b483b2a84d9e277e628847a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseHealth: 10
+  deathParticles: {fileID: 7367764442123050494, guid: 1766b7b60103f1246a5e01bfdfbeb9c9,
+    type: 3}
+  baseAttackDamage: 5
+  attackDelay: 1
+  moveSpeed: 5
+  jumpForce: 7
+  moveDelay: 1.5
   startSize: 2
-  base_health: 10
   sizeScaling:
   - 0.8
   - 1.2
   - 1.8
-  hit: 0
-  current_size: 0
-  health: 0
-  move_speed: 5
-  jump_force: 7
-  move_delay: 1.5
-  center_position: {fileID: 0}
-  area_size: {x: 5, y: 5}
-  movement_position: {x: 0, y: 0, z: 0}
-  move_timer: 0
+  areaCenter: {fileID: 0}
+  areaSize: {x: 8, y: 8}
   healthBarUI: {fileID: 897866773341805807}
+  hit: 0
 --- !u!65 &1353357682
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -56,7 +56,15 @@ public class AttackManager : MonoBehaviour
             if (!enemy.hit && player.playerAttacking())
             {
                 enemy.hit = true;
-                enemy.TakeDamage(player.attack_damage);
+
+                if (player.GetComponent<Animator>().GetBool("armed"))
+                {
+                    enemy.TakeDamage(player.attack_damage * 2);
+                }
+                else
+                {
+                    enemy.TakeDamage(player.attack_damage);
+                }
                 hit_something = true;
             }
 

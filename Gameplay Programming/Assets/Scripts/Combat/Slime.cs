@@ -5,50 +5,65 @@ using UnityEngine.UI;
 
 public class Slime : MonoBehaviour
 {
-    public Size startSize = Size.MEDIUM;
-    public float base_health = 10;
-    public float[] sizeScaling = new float[3] { 0.2f, 1, 2 };
+    [Header("Health")]
+    public float baseHealth = 10;
+    float health = 0;
 
-    public bool hit = false;
-    public Size current_size;
-    public float health = 0;
-    float attack_damage = 10;
-    public float move_speed = 5;
-    public float jump_force = 7;
-    public float move_delay = 1.5f;
+    [Header("Death")]
+    public GameObject deathParticles;
 
-    public Transform center_position;
-    public Vector2 area_size;
-    public Vector3 movement_position;
-    bool player_in_range = false;
-    public float move_timer = 0;
-    bool jumping = false;
-
-    float attack_delay = 1;
+    [Header("Attack")]
+    public float baseAttackDamage = 5;
+    public float attackDelay = 1;
+    float attack_damage = 5;
     float attack_timer = 0;
 
+    [Header("Movement Variables")]
+    public float moveSpeed = 5;
+    public float jumpForce = 7;
+    public float moveDelay = 1.5f;
+
+    Vector3 movement_position;
+    bool player_in_range = false;
+    float move_timer = 0;
+    bool jumping = false;
+
+    [Header("Sizing")]
+    public Size startSize = Size.MEDIUM;
+    public float[] sizeScaling = new float[3] { 0.2f, 1, 2 };
+    Size current_size;
+    
+    [Header("Patrol Area")]
+    public Transform areaCenter;
+    public Vector2 areaSize;
+
+    [Header("UI")]
     public Slider healthBarUI;
+
+    [HideInInspector]
+    public bool hit = false;
     Rigidbody rigid_body;
+    Animator animator;
     RPGCameraController player_camera;
     RPGCharacterController player;
-
-    bool move_backwards = false;
 
     private void Awake()
     {
         rigid_body = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
         player = FindObjectOfType<RPGCharacterController>();
         player_camera = FindObjectOfType<RPGCameraController>();
 
-        base_health = player.attack_damage;
+        baseHealth = player.attack_damage;
 
-        health = base_health * ((int)startSize + 1);
+        health = baseHealth * ((int)startSize + 1);
+        attack_damage = baseAttackDamage * ((int)startSize + 1);
         current_size = startSize;
         float scale = sizeScaling[(int)startSize];
         transform.localScale = new Vector3(scale, scale, scale);
 
-        float x_pos = Random.Range(center_position.position.x - area_size.x, center_position.position.x + area_size.x);
-        float z_pos = Random.Range(center_position.position.z - area_size.y, center_position.position.z + area_size.y);
+        float x_pos = Random.Range(areaCenter.position.x - areaSize.x, areaCenter.position.x + areaSize.x);
+        float z_pos = Random.Range(areaCenter.position.z - areaSize.y, areaCenter.position.z + areaSize.y);
         movement_position = new Vector3(x_pos, 0, z_pos);
 
         healthBarUI = GetComponentInChildren<Slider>();
@@ -73,8 +88,8 @@ public class Slime : MonoBehaviour
             if (Vector3.Distance(transform.position, movement_position) < 1)
             {
                 move_timer = 0;
-                float x_pos = Random.Range(center_position.position.x - area_size.x, center_position.position.x + area_size.x);
-                float z_pos = Random.Range(center_position.position.z - area_size.y, center_position.position.z + area_size.y);
+                float x_pos = Random.Range(areaCenter.position.x - areaSize.x, areaCenter.position.x + areaSize.x);
+                float z_pos = Random.Range(areaCenter.position.z - areaSize.y, areaCenter.position.z + areaSize.y);
                 movement_position = new Vector3(x_pos, 0, z_pos);
             }
         }
@@ -90,20 +105,23 @@ public class Slime : MonoBehaviour
         if (other.gameObject.tag.Equals("Player"))
         {
             other.GetComponent<RPGCharacterController>().DamagePlayer(attack_damage);
-            move_backwards = true;
 
             if (!jumping)
             {
                 move_timer = 0;
-                rigid_body.velocity = Vector3.up * jump_force;
+                rigid_body.velocity = Vector3.up * jumpForce;
                 jumping = true;
+
             }
             
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Walkable"))
         {
+            if (jumping)
+            {
+                animator.SetTrigger("land");
+            }
             jumping = false;
-            move_backwards = false;
         }
     }
 
@@ -113,58 +131,48 @@ public class Slime : MonoBehaviour
         {
             attack_timer += Time.deltaTime;
 
-            if (attack_timer > attack_delay)
+            if (attack_timer > attackDelay)
             {
                 attack_timer = 0;
                 other.GetComponent<RPGCharacterController>().DamagePlayer(attack_damage);
-                move_backwards = true;
-
-                if (!jumping)
-                {
-                    move_timer = 0;
-                    rigid_body.velocity = Vector3.up * jump_force;
-                    jumping = true;
-                }
-                
+                jumping = false;
+                animator.SetTrigger("fall");
             }
         }
     }
 
     void Move(Vector3 direction)
     {
-        Vector3 rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), move_speed * Time.deltaTime).eulerAngles;
+        Vector3 rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction, transform.up), moveSpeed * Time.deltaTime).eulerAngles;
         transform.rotation = Quaternion.Euler(0, rotation.y, 0);
 
-        if (move_backwards)
+        if (jumping)
         {
-            rigid_body.velocity -= direction.normalized * move_speed * Time.deltaTime;
+            rigid_body.velocity += direction.normalized * moveSpeed * Time.deltaTime;
         }
         else
         {
-            if (jumping)
-            {
-                rigid_body.velocity += direction.normalized * move_speed * Time.deltaTime;
-            }
-            else
-            {
-                move_timer += Time.deltaTime;
+            move_timer += Time.deltaTime;
 
-                if (move_timer > move_delay)
-                {
-                    move_timer = 0;
-                    rigid_body.velocity = Vector3.up * jump_force;
-                    jumping = true;
-                }
+            if (move_timer > moveDelay)
+            {
+                move_timer = 0;
+                rigid_body.velocity = Vector3.up * jumpForce;
+                jumping = true;
+                animator.SetTrigger("jump");
             }
         }
+        
     }
 
     public void TakeDamage(float amount)
     {
+        GetComponent<Animator>().SetTrigger("hit");
         health -= amount;
 
         if (health <= 0)
         {
+            Instantiate(deathParticles, transform.position, Quaternion.identity);
             if (current_size == Size.SMALL)
             {
                 Destroy(gameObject);
@@ -192,12 +200,13 @@ public class Slime : MonoBehaviour
         float scale = sizeScaling[(int)startSize - 1];
 
         slime.startSize = current_size - 1;
-        slime.health = base_health * ((int)slime.startSize + 1);
+        slime.health = baseHealth * ((int)slime.startSize + 1);
         slime.current_size = slime.startSize;
         slime.transform.position = RandomSpawnPosition();
         slime.transform.localScale = new Vector3(scale, scale, scale);
         slime.healthBarUI = slime.GetComponentInChildren<Slider>();
         slime.healthBarUI.maxValue = slime.health;
+        slime.attack_damage = baseAttackDamage * ((int)slime.startSize + 1);
     }
 
     Vector3 RandomSpawnPosition()
