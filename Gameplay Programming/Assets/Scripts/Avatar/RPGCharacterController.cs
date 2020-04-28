@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum Weapons
 {
@@ -51,11 +52,12 @@ public class RPGCharacterController : MonoBehaviour
     public SpeedBoost speed_boost;
     public DoubleJump double_jump;
 
-    // Attack 
+    // Attack
+    public Slider health_ui;
     float health = 100;
     public float attack_damage = 10f;
     [HideInInspector]
-    public bool hit;
+    public bool hit_landed;
     AttackManager[] attack_colliders;
 
     // Switches
@@ -76,6 +78,8 @@ public class RPGCharacterController : MonoBehaviour
 
         weapon_armed.SetActive(false);
 
+        health_ui.maxValue = health;
+
         // Set To Unarmed
         current_weapon = Weapons.TWO_HANDED_SWORD;
         Sheath();
@@ -83,6 +87,8 @@ public class RPGCharacterController : MonoBehaviour
 
     void Update()
     {
+        health_ui.value = health;
+
         if (accept_input)
         {
             UpdateAnimator();
@@ -233,7 +239,7 @@ public class RPGCharacterController : MonoBehaviour
             player_animator.GetCurrentAnimatorStateInfo(3).IsName("Default"))
         {
             armed_timer = 0;
-            player_animator.SetInteger("attack", -1);
+            player_animator.SetTrigger("attack_left");
         }
         else if (Input.GetButtonDown("RightAttack") && 
             !player_animator.GetCurrentAnimatorStateInfo(0).IsName("Double Jump") && 
@@ -241,11 +247,7 @@ public class RPGCharacterController : MonoBehaviour
             player_animator.GetCurrentAnimatorStateInfo(3).IsName("Default"))
         {
             armed_timer = 0;
-            player_animator.SetInteger("attack", 1);
-        }
-        else
-        {
-            player_animator.SetInteger("attack", 0);
+            player_animator.SetTrigger("attack_right");
         }
 
         // Kick
@@ -354,7 +356,6 @@ public class RPGCharacterController : MonoBehaviour
         player_animator.SetFloat("vertical_input", 0);
         player_animator.SetFloat("horizontal_input", 0);
         player_animator.SetInteger("jumping", 0);
-        player_animator.SetInteger("attack", 0);
         player_animator.SetInteger("kick", 0);
         player_animator.SetBool("strafe", false);
 
@@ -370,18 +371,29 @@ public class RPGCharacterController : MonoBehaviour
 
     public void DamagePlayer(float amount)
     {
-        player_animator.SetTrigger("hit");
-        health -= amount;
-
-        if (health <= 0)
+        if (!player_animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
         {
-            Death();
+            player_animator.SetTrigger("hit");
+            health -= amount;
+
+            if (health <= 0)
+            {
+                Death();
+            }
         }
+    }
+
+    public bool playerAttacking()
+    {
+        bool unarmed_attack = player_animator.GetCurrentAnimatorStateInfo(2).IsName("Attack-L") || player_animator.GetCurrentAnimatorStateInfo(2).IsName("Attack-R");
+        bool armed_attack = player_animator.GetCurrentAnimatorStateInfo(3).IsName("Attack-L") || player_animator.GetCurrentAnimatorStateInfo(3).IsName("Attack-R");
+
+        return unarmed_attack || armed_attack;
     }
 
     void Hit()
     {
-        hit = true;
+        hit_landed = true;
 
         foreach (AttackManager attack in attack_colliders)
         {
@@ -398,6 +410,6 @@ public class RPGCharacterController : MonoBehaviour
 
     void NotHit()
     {
-        hit = false;
+        hit_landed = false;
     }
 }

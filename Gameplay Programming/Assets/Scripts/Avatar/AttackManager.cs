@@ -9,6 +9,7 @@ public class AttackManager : MonoBehaviour
 
     [HideInInspector]
     public GameObject collided = null;
+    bool hit_something = false;
 
     private void Awake()
     {
@@ -18,23 +19,60 @@ public class AttackManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //collided = other.gameObject;
-        Slime enemy = other.gameObject.GetComponent<Slime>();
-        if (enemy != null && !enemy.hit &&
-            ((!player_animator.GetBool("armed") && !player_animator.GetCurrentAnimatorStateInfo(2).IsName("Default")) ||
-            ((player_animator.GetBool("armed") && !player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(3).IsName("Default")))))
+        if (player_animator.GetBool("armed"))
         {
-            enemy.hit = true;
-            enemy.TakeDamage(player.attack_damage);
+            Slime enemy = other.gameObject.GetComponent<Slime>();
+            AttackEnemy(enemy);
         }
+        else
+        {
+            if (!hit_something)
+            {
+                Slime enemy = other.gameObject.GetComponent<Slime>();
+                AttackEnemy(enemy);
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        Slime enemy = other.gameObject.GetComponent<Slime>();
+        AttackEnemy(enemy);
     }
 
     private void OnTriggerExit(Collider other)
     {
         Slime enemy = other.gameObject.GetComponent<Slime>();
-        if (enemy != null)
+        if (enemy != null && !player.playerAttacking())
         {
             enemy.hit = false;
+        }
+    }
+
+    void AttackEnemy(Slime enemy)
+    {
+        if (enemy != null)
+        {
+            if (!enemy.hit && player.playerAttacking())
+            {
+                enemy.hit = true;
+
+                if (player.GetComponent<Animator>().GetBool("armed"))
+                {
+                    enemy.TakeDamage(player.attack_damage * 2);
+                }
+                else
+                {
+                    enemy.TakeDamage(player.attack_damage);
+                }
+                hit_something = true;
+            }
+
+            if (!player.playerAttacking())
+            {
+                enemy.hit = false;
+                hit_something = false;
+            } 
         }
     }
 }
